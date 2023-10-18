@@ -1,0 +1,1 @@
+MONGODB_URL=mongodb+srv://rubblestech880:Mystic81book3400@rubblestech.pqlgmpg.mongodb.net/DataStore?retryWrites=true&w=majority
