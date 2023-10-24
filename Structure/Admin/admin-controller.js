@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { registerAdmin } = require('./admin-register.-service');
-const { verifyAccessToken } = require('../Utils/token.utils');
+const { verifyAccessToken, refreshTokenStore } = require('../Utils/token.utils');
 const { getAppUser, deleteUser, upDateUser } = require('../AppUser/appuser-service');
 const { saveDeletedUser, blockUserService, unblockUserService, removeFromLocation, clearAllDeletedUsers, clearLocationUsers } = require('../Utils/user-utils');
 
@@ -9,6 +9,8 @@ const { saveDeletedUser, blockUserService, unblockUserService, removeFromLocatio
 router.post('/api/register/admin', async (req, res) => {
     try {
         const { adminUser } = await registerAdmin(req.body.payload);
+
+        await refreshTokenStore(adminUser);
 
         res.send({ "status": "admin registration successful", "isRegistered": true, "adminUser": adminUser });
 

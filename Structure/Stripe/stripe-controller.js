@@ -39,7 +39,7 @@ router.get('/api/stripe/customer/portal', async (req, res) => {
 
 
 // CHECKOUT SUCCESS, REGULAR ITEMS
-router.get('/api/checkout/success/multiple/:sessionId',
+router.get('/api/regular/checkout/success/multiple/:sessionId',
     async (req, res) => {
         try {
             const decodedToken = await verifyAccessToken(req.headers["authorization"]);

@@ -8,7 +8,7 @@ const { itemNameChecker } = require('./helper')
 const { multipleSubscriptionItemsHandler } = require('../Utils/multiple-subscription-items-utils');
 const { singleSubscriptionItemHandler } = require('../Utils/single-subscription-item-utils');
 
-router.post('/api/sub/multiple', async (req, res) => {
+router.post('/api/sub/multiple/create-checkout-session', async (req, res) => {
     const decodedToken = await verifyAccessToken(req.headers["authorization"]);
 
     const userId = decodedToken.user.id;
@@ -29,7 +29,7 @@ router.post('/api/sub/multiple', async (req, res) => {
 
 })
 
-router.post('/api/sub/single', async (req, res) => {
+router.post('/api/sub/single/create-checkout-session', async (req, res) => {
     const decodedToken = await verifyAccessToken(req.headers["authorization"]);
 
     const userId = decodedToken.user.id;

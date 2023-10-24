@@ -7,7 +7,8 @@ const refreshTokenSchema = new Schema({
     
     refreshtoken: {
         type: String,
-        default: "refresh token"
+        default: "refresh token",
+        unique: true
     }
 
 }, { timestamps: true});

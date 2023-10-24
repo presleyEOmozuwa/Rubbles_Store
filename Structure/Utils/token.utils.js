@@ -104,15 +104,16 @@ const passwordResetToken = () => {
 }
 
 const saveRefreshToken = async (user, token) => {
-    const doc = await getRefreshToken(user._id);
+    const doc = await retrieveRefreshToken(user._id);
+    if (doc.refreshtoken !== token){
+        doc.set({
+            refreshtoken: token
+        })
 
-    if (doc){
-        throw new Error("refresh token already exist")
+        await doc.save();
     }
     else{
-        await RefreshToken.create({
-            refreshtoken: token
-        });
+        throw new Error("refresh token already exist")
     }
 }
 
@@ -130,23 +131,23 @@ const verifyGoogleToken = async (clientId, jwtToken) => {
 
 const resetRefreshToken = async (user, requestToken) => {
     const doc = await retrieveRefreshToken(user._id);
-
-    if(requestToken !== doc.refreshtoken){
+    if(requestToken === doc.refreshtoken){
+        doc.set({
+            refreshtoken: "refresh token"
+        })
+    
+        await doc.save();
+    }
+    else{
         throw new Error("refresh token do not match");
     }
-
-    doc.set({
-        refreshtoken: "refresh token"
-    })
-
-    await doc.save();
 
 }
 
 const emailToken = (user) => {
     const key = process.env.EMAIL_TOKEN_KEY;
     const payload = {
-        id: user._id,
+        userId: user._id,
         datecreated: new Date()
     }
     const options = {

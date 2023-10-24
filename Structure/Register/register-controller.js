@@ -11,10 +11,10 @@ const { locationTracker } = require('../Utils/user-utils');
 const {  assignSubscriptionToUser, assignSubArchiveToUser } = require('../Utils/subscription-utils');
 
 
-router.post('/api/register/payload', async (req, res) => {
+router.post('/api/register', async (req, res) => {
     try {
         // REGISTERED USER RETURNED
-        const { normalUser } = await register(req.body);
+        const { normalUser } = await register(req.body.payload);
 
         await locationTracker(normalUser, req.session.id);
         

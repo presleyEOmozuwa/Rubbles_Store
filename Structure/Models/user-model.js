@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'); 
 const { Schema, model } = mongoose;
-const { Cart, SubCart, OrderArchive, Order, Subscription, SubArchive } = require('../Models/common-model');
+const { Cart, SubCart, OrderArchive, Order, Subscription, SubArchive } = require('./common-model');
 const RefreshToken = require('./refreshToken-model');
 
 // Declare the Schema of the Mongo model

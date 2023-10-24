@@ -18,9 +18,9 @@ router.post('/api/product-form/payload', async (req, res) => {
         const admin = await getAppUser(adminId);
 
         if (admin.role === "admin") {
-            const { product } = await createProduct(req.body);
+            const { product } = await createProduct(req.body.payload);
 
-            const { categories } = req.body;
+            const { categories } = req.body.payload;
 
             categories.forEach(async (catObj) => {
                 if(catObj.ischecked){

@@ -22,20 +22,20 @@ const removeFromLocation = async (removedUser) => {
     const location = await LocationTracker.findOne({ userId: removedUser._id });
 
     if (location) {
-        await localUser.deleteOne();
+        await location.deleteOne();
     }
 }
 
 // CLEAR OUT ALL DELETED USERS
 const clearAllDeletedUsers = async () => {
-    const delUsers = await DeletedUser.findAll();
+    const delUsers = await DeletedUser.find();
 
     if (delUsers.length === 0) {
         throw new Error("already cleared out");
     }
 
     delUsers.forEach(async (user) => {
-        await user.destroy();
+        await user.deleteOne();
     })
 }
 

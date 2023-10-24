@@ -57,10 +57,6 @@ const productSchema = new Schema({
         type: Number,
         default: 0
     },
-    isAvailable: {
-        type: String,
-        required: true
-    },
 
     carts: [{type: ObjectId, ref: 'Cart'}],
     

@@ -8,7 +8,7 @@ const { multipleRegularItemsHandler } = require('../Utils/multiple-regular-item-
 const { singleRegularItemHandler } = require('../Utils/single-regular-items-utils');
 const { addCartItemToOrder } = require('../Utils/order-utils');
 
-router.post('/api/regular/multiple', async (req, res) => {
+router.post('/api/regular/multiple/create-checkout-session', async (req, res) => {
     const decodedToken = await verifyAccessToken(req.headers["authorization"]);
 
     const userId = decodedToken.user.id;
@@ -27,7 +27,7 @@ router.post('/api/regular/multiple', async (req, res) => {
 
 })
 
-router.post('/api/regular/single', async (req, res) => {
+router.post('/api/single/regular/create-checkout-session', async (req, res) => {
     const decodedToken = await verifyAccessToken(req.headers["authorization"]);
 
     const userId = decodedToken.user.id;

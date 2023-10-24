@@ -13,11 +13,7 @@ const getAllUsers = async () => {
 
 // GET SINGLE USER BY ID
 const getAppUser = async (userId) => {
-    const user = await User.findOne({
-        where: {
-            id: userId
-        }
-    });
+    const user = await User.findOne({ _id: userId });
 
     if (!user) {
         throw new Error("user not found");
@@ -28,11 +24,7 @@ const getAppUser = async (userId) => {
 
 // GET SINGLE USER BY ID
 const getUserByEmail = async (email) => {
-    const user = await User.findOne({
-        where: {
-            email: email
-        }
-    });
+    const user = await User.findOne({ email: email });
 
     if (!user) {
         throw new Error("invalid email or password");
@@ -43,11 +35,7 @@ const getUserByEmail = async (email) => {
 
 // GET USER BY STRIPE ID
 const getUserByStripeId = async (customerId) => {
-    const user = await User.findOne({
-        where: {
-            stripecustomerid: customerId
-        }
-    });
+    const user = await User.findOne({ stripecustomerid: customerId });
 
     if (!user) {
         throw new Error("user not found");

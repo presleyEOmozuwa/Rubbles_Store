@@ -6,13 +6,13 @@ const getRefreshToken = async (userId) => {
 }
 
 const retrieveRefreshToken = async (userId) => {
-    const token = await RefreshToken.findOne({userId: userId});
+    const doc = await RefreshToken.findOne({userId: userId});
     
-    if(!token){
+    if(!doc){
         throw new Error("refresh token document not found")
     }
     
-    return token;
+    return doc;
 }
 
 
