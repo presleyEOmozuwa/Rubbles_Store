@@ -10,8 +10,8 @@ const singleSubscriptionItemHandler = async (user, cartItems) => {
             { price: product.priceId, quantity: product.quantity }
         ],
         mode: 'subscription',
-        success_url: `${process.env.CLIENT_BASE_URL}/auth/sub/multiple/checkout/success/session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.CLIENT_BASE_URL}/auth/checkout/failure/sub/multiple/session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${process.env.CLIENT_BASE_URL}/auth/checkout/sub/success/session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.CLIENT_BASE_URL}/auth/checkout/failure/sub/session_id={CHECKOUT_SESSION_ID}`,
 
     });
 

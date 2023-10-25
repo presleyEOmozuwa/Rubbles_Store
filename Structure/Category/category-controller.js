@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getCategoryList, getCategory, createCategory, deleteCategory } = require('./category-service');
+const { getCategoryList, getCategory, createCategory, deleteCategory, upDateCategory } = require('./category-service');
 const { getAppUser } = require('../AppUser/appuser-service');
 const { verifyAccessToken } = require('../Utils/token.utils')
 
@@ -55,6 +55,26 @@ router.post('/api/create/category', async (req, res) => {
         if (admin.role === "admin") {
             await createCategory(req.body.payload)
             res.send({ "status": "category created successfully" });
+        }
+
+    }
+    catch (err) {
+        res.status(400).send({ "error": err.message });
+    }
+})
+
+router.put('/api/category/update', async (req, res) => {
+    try {
+        const decodedToken = await verifyAccessToken(req.headers["authorization"]);
+
+        const adminId = decodedToken.user.id;
+
+        const admin = await getAppUser(adminId);
+
+        if (admin.role === "admin") {
+            await upDateCategory(req.body.payload);
+
+            res.send({ "status": "category updated successful" });
         }
 
     }

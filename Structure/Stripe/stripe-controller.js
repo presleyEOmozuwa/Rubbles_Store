@@ -39,7 +39,7 @@ router.get('/api/stripe/customer/portal', async (req, res) => {
 
 
 // CHECKOUT SUCCESS, REGULAR ITEMS
-router.get('/api/regular/checkout/success/multiple/:sessionId',
+router.get('/api/checkout/success/regular/:sessionId',
     async (req, res) => {
         try {
             const decodedToken = await verifyAccessToken(req.headers["authorization"]);
@@ -79,7 +79,7 @@ router.get('/api/regular/checkout/success/multiple/:sessionId',
 
 
 // CHECKOUT SUCCESS, SUBSCRIPTION ITEMS
-router.get('/api/sub/checkout/success/multiple/:sessionId',
+router.get('/api/checkout/success/sub/:sessionId',
     async (req, res) => {
         try {
             const decodedToken = await verifyAccessToken(req.headers["authorization"]);
@@ -118,8 +118,9 @@ router.get('/api/sub/checkout/success/multiple/:sessionId',
     });
 
 
+
 // CHECKOUT FAILURE, MULTIPLE ITEMS
-router.get('/api/checkout/failure/multiple/:sessionId', async (req, res) => {
+router.get('/api/checkout/failure/regular/:sessionId', async (req, res) => {
     try {
         const decodedToken = await verifyAccessToken(req.headers["authorization"]);
 
@@ -139,7 +140,7 @@ router.get('/api/checkout/failure/multiple/:sessionId', async (req, res) => {
 
 
 // CHECKOUT FAILURE, SUBSCRIPTION ITEMS
-router.get('/api/checkout/failure/single/:sessionId', async (req, res) => {
+router.get('/api/checkout/failure/sub/:sessionId', async (req, res) => {
     try {
         const decodedToken = await verifyAccessToken(req.headers["authorization"]);
 

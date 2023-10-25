@@ -33,7 +33,7 @@ router.get('/api/cart', async (req, res) => {
     try {
         const decodedToken = await verifyAccessToken(req.headers["authorization"]);
         
-        const userId = decodedToken.user._id
+        const userId = decodedToken.user.id
         
         const user = await getAppUser(userId)
         

@@ -46,9 +46,8 @@ const getUserByStripeId = async (customerId) => {
 
 
 // UPDATE A USER
-const upDateUser = async (id, payload) => {
-    const user = await getAppUser(id);
-
+const upDateUser = async (userId, payload) => {
+    const user = await getAppUser(userId)
     user.set({
         username: payload.username,
         email: payload.email

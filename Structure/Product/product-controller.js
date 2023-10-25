@@ -29,7 +29,7 @@ router.post('/api/product-form/payload', async (req, res) => {
                 }
             })
 
-            res.send({ "isProductCreated": true, "status": "product successfully created", "product": product, "isCatAddedtoProd": true });
+            res.send({ "status": "product successfully created" });
         }
 
     }
@@ -106,7 +106,7 @@ router.get('/api/product/with/categories/:productId', async (req, res) => {
 
 
 // REQUEST TO UPDATE PRODUCT
-router.put('/api/product-update-form/payload', async (req, res) => {
+router.put('/api/update/product', async (req, res) => {
     try {
         const decodedToken = await verifyAccessToken(req.headers["authorization"]);
 
@@ -115,9 +115,9 @@ router.put('/api/product-update-form/payload', async (req, res) => {
         const admin = await getAppUser(adminId);
 
         if (admin.role === "admin") {
-            const { upDatedProduct } = await upDateProduct(req.body);
+            const { upDatedProduct } = await upDateProduct(req.body.payload);
 
-            const { categories } = req.body;
+            const { categories } = req.body.payload;
 
             categories.forEach(async (catObj) => {
                 if(catObj.ischecked){
@@ -130,7 +130,7 @@ router.put('/api/product-update-form/payload', async (req, res) => {
                 }
             })
 
-            res.send({ "isProductUpdate": true, "status": "product updated successfully", "isCatAddedtoProd": true, "isRemovedCatFromProd": true });
+            res.send({ "status": "product updated successfully" });
 
         }
 
@@ -157,7 +157,7 @@ router.delete('/api/product-delete/:productId', async (req, res) => {
                 throw new Error("product deletion failed");
             }
 
-            res.send({ "status": "product deleted successfully", "isDeleted": isDeleted, "deletedItem": deletedItem });
+            res.send({ "status": "product deleted successfully", "deletedItem": deletedItem });
         }
 
     }
