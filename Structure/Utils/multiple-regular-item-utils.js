@@ -1,4 +1,3 @@
-require('dotenv').config({ path: "../../vars/.env" });
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const multipleRegularItemsHandler = async (user, cartItems) => {
@@ -19,10 +18,9 @@ const multipleRegularItemsHandler = async (user, cartItems) => {
         customer: user.stripecustomerid,
         line_items,
         mode: 'payment',
-        success_url: `${process.env.CLIENT_BASE_URL}/auth/checkout/regular/success/session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.CLIENT_BASE_URL}/auth/checkout/failure/regular/session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${process.env.CLIENT_BASE_URL}/auth/checkout/regular/success/{CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.CLIENT_BASE_URL}/auth/checkout/failure/regular/{CHECKOUT_SESSION_ID}`,
     });
-
 
     return session;
 }

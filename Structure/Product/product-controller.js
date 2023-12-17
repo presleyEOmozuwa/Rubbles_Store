@@ -2,7 +2,7 @@ const express = require('express');
 const { getCategoryList, getCategoryByName } = require('../Category/category-service');
 const router = express.Router();
 const { getAppUser } = require('../AppUser/appuser-service');
-const { getProducts, getSubProducts, getProduct, getProductWithCategories, createProduct, upDateProduct, deleteProduct } = require('./product-service');
+const { getProductlist, getSubProducts, getProduct, getProductWithCategories, createProduct, upDateProduct, deleteProduct } = require('./product-service');
 const { addCategoryToProduct, addCategoryToUpdatedProduct, removeCategoryFromProduct } = require('../Utils/product.utils');
 const { verifyAccessToken } = require('../Utils/token.utils');
 
@@ -29,7 +29,7 @@ router.post('/api/product-form/payload', async (req, res) => {
                 }
             })
 
-            res.send({ "status": "product successfully created" });
+            res.send({ "status": "product successfully created", "product": product });
         }
 
     }
@@ -38,16 +38,17 @@ router.post('/api/product-form/payload', async (req, res) => {
     }
 });
 
-// REQUEST TO GET ALL PRODUCTS
 router.get('/api/product-list', async (req, res) => {
     try {
-            const products = await getProducts();
+            const { count, page } = req.query
+            const products = await getProductlist(count, page);
             res.send({ "products": products });
-    }
+        }
     catch (err) {
         res.status(401).send({ error: err.message });
     }
 });
+
 
 // REQUEST TO GET A SINGLE PRODUCT
 router.get('/api/product-details/:productId', async (req, res) => {

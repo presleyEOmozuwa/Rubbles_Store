@@ -7,28 +7,28 @@ const RefreshToken = require('./refreshToken-model');
 const userSchema = new Schema({
     stripecustomerid:{
         type: String,
-        required: true,
+        default: "stripecustomerid"
     },
     
     username:{
         type: String,
-        required: true,
+        default: "username"
     },
     
     email:{
         type: String,
-        required: true,
-        unique: true
+        unique: true,
+        default: "email"
     },
     
     password:{
         type: String,
-        required: true
+        default: "password"
     },
     
     role:{
         type: String,
-        required: true
+        default: "role"
     },
     
     confirmemail:{

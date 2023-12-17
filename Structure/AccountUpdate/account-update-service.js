@@ -1,11 +1,16 @@
 const bcrypt = require('bcrypt');
 const OldUserEmail = require('../Models/oldemail-model');
 
+const saveOldEmail = async (user, currEmail) => {
+    const doc = await OldUserEmail.findOne({ email: currEmail })
 
-const getOldEmail = async (currEmail) => {
-    const doc = await OldUserEmail.findOne({email: currEmail})
+    if (doc) {
+        throw new Error("you cannot use an old email, provide a new one");
+    }
 
-    return doc;
+    await OldUserEmail.create({
+        email: user.email
+    })
 }
 
 const passwordChecker = async (user, oldPassword) => {
@@ -18,4 +23,6 @@ const passwordHasher = async (newPassword) => {
     return hashedPassword
 }
 
-module.exports = { getOldEmail, passwordChecker, passwordHasher }
+
+
+module.exports = { saveOldEmail, passwordChecker, passwordHasher }

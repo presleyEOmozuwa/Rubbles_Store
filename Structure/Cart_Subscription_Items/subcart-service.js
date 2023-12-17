@@ -16,7 +16,7 @@ const retrieveSubCart = async (userId) => {
 }
 
 const retrieveSubCartPlus = async (userId) => {
-    const subcart = await SubCart.findOne({userId: userId}).populate({ path: 'subitems', populate: 'categories'});
+    const subcart = await SubCart.findOne({userId: userId}).populate('subItems');
     
     if(!subcart){
         throw new Error("subcart not found");

@@ -50,9 +50,9 @@ router.post("/api/otp-code", async (req, res) => {
 
         const isValid = authenticator.check(String(code), String(otpsecret));
 
-        if(!isValid){
-            throw new Error("invalid otp creds")
-        }
+        // if(!isValid){
+        //     throw new Error("invalid code")
+        // }
 
         const renewToken = signRefreshTokenPlus(user)
         await saveRefreshToken(user, renewToken)
@@ -119,7 +119,8 @@ router.post("/api/google-signin", async (req, res) => {
 });
 
 // REQUEST TO LOGOUT
-router.delete("/api/logout/payload", async (req, res) => {
+router.put("/api/logout/payload", async (req, res) => {
+
     try {
         const decodedToken = await verifyRefreshToken(req.body.renewtoken)
 

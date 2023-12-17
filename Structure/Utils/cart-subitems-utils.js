@@ -1,10 +1,11 @@
 const { getSubCart } = require('../Cart_Subscription_Items/subcart-service');
 const { SubCart } = require('../Models/common-model');
+const { objCheckerOne } = require('./obj-checker-utils');
 
 
 const assignSubCartToUser = async (user) => {
     const subcart = await getSubCart(user._id);
-    if (!subcart) {
+    if (!subcart || objCheckerOne(subcart) === 0) {
         await SubCart.create({
             userId: user._id
         })
@@ -18,7 +19,7 @@ const assignSubCartToUser = async (user) => {
 const addProductToSubCart = async (subcartId, product) => {
     await SubCart.findByIdAndUpdate(
         subcartId,
-        { $addToSet: { subitems: [product._id] } },
+        { $addToSet: { subItems: [product._id] } },
         { new: true }
     );
 }
@@ -26,7 +27,7 @@ const addProductToSubCart = async (subcartId, product) => {
 const removeProductFromSubCart = async (subcartId, product) => {
     await SubCart.findByIdAndUpdate(
         subcartId,
-        { $pullAll: { subitems: [product._id] } },
+        { $pullAll: { subItems: [product._id] } },
         { new: true }
     );
 }

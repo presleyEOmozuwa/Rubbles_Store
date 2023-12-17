@@ -39,7 +39,7 @@ router.put('/api/update/user', async (req, res) => {
         
         const user = await getAppUser(userId)
 
-        await upDateUser(user, req.body.payload);
+        await upDateUser(user._id, req.body.payload);
 
         res.send({"status": "user updated successfully"});
     }
@@ -52,7 +52,7 @@ router.delete('/api/delete/user/:userId', async (req, res) => {
     try {
         const user = await getAppUser(req.params.userId);
         
-        const removedUser = await deleteUser(user._id);
+        const { removedUser } = await deleteUser(user._id);
 
         await saveDeletedUser(removedUser);
         

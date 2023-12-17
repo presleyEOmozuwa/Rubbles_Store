@@ -3,7 +3,7 @@ const router = express.Router();
 const { registerAdmin } = require('./admin-register.-service');
 const { verifyAccessToken, refreshTokenStore } = require('../Utils/token.utils');
 const { getAppUser, deleteUser, upDateUser } = require('../AppUser/appuser-service');
-const { saveDeletedUser, blockUserService, unblockUserService, removeFromLocation, clearAllDeletedUsers, clearLocationUsers } = require('../Utils/user-utils');
+const { saveDeletedUser, blockUserService, unblockUserService, removeFromLocation, clearAllDeletedUsers, clearLocationUsers, clearOrdersFromArchive } = require('../Utils/user-utils');
 
 
 router.post('/api/register/admin', async (req, res) => {
@@ -168,5 +168,24 @@ router.delete('/api/admin/clear-locationusers', async (req, res) => {
         res.status(400).send({ error: err.message });
     }
 });
+
+router.delete('/api/admin/clear-orders/:userId', async (req, res) => {
+    try {
+        const decodedToken = await verifyAccessToken(req.headers["authorization"]);
+
+        const adminId = decodedToken.user.id;
+
+        const admin = await getAppUser(adminId);
+
+        if (admin.role === "admin") {
+            await clearOrdersFromArchive(req.params.userId);
+            res.send({ "status": "orders cleared from archive" });
+        }
+    }
+    catch (err) {
+        res.status(400).send({ error: err.message });
+    }
+});
+
 
 module.exports = router;

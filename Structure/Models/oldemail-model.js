@@ -4,8 +4,8 @@ const { Schema, model } = mongoose;
 const oldUserEmailSchema = new Schema({
     email:{
         type: String,
-        required: true,
         unique: true,
+        default: "email"
     },
     role:{
         type: String,

@@ -35,7 +35,7 @@ const addOrderToOrderArchive = async (user, updatedOrder) => {
     
     await OrderArchive.findByIdAndUpdate(
         orderArchive._id,
-        { $push: { orders: [updatedOrder] } },
+        { $addToSet: { orders: [updatedOrder] } },
         { new: true }
     );
 }

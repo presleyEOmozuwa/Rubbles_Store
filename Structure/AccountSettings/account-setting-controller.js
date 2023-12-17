@@ -25,9 +25,18 @@ router.post('/api/forgot-password/payload', async (req, res) => {
 });
 
 // RESET PASSWORD REQUEST
-router.post('/api/reset-password/payload', async (req, res) => {
+router.put('/api/reset-password/payload', async (req, res) => {
     try {
         const { token, password } = req.body.payload;
+
+        const request = {
+            body: {
+                payload: {
+                    token: "zkcgkgcgdsgsdggs",
+                    password: "450000"
+                }
+            }
+        }
 
         await verifyPasswordResetTokens(token, password);
 
@@ -37,6 +46,7 @@ router.post('/api/reset-password/payload', async (req, res) => {
     catch (err) {
         res.status(400).send({ "error": err.message });
     }
+
 });
 
 module.exports = router;

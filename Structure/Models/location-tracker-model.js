@@ -4,15 +4,15 @@ const { Schema, model } = mongoose;
 const locationTrackerSchema = new Schema({
     userId:{
         type: String,
-        required: true,
+        default: "userId"
     },
     email:{
         type: String,
-        required: true
+        default: "email"
     },
     locationId:{
         type: String,
-        required: true
+        default: "locationId"
     }
 }, { timestamps: true});
 

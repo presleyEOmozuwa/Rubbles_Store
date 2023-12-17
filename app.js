@@ -24,7 +24,6 @@ const productRouter = require('./Structure/Product/product-controller');
 const categoryRouter = require('./Structure/Category/category-controller');
 const subCartRouter = require('./Structure/Cart_Subscription_Items/subcart-controller');
 const stripeRouter = require('./Structure/Stripe/stripe-controller');
-const deliveryRouter = require('./Structure/Shipping/delivery-status-controller');
 const subscriptionRouter = require('./Structure/Subscription/subscription-controller');
 const subArchiveRouter = require('./Structure/Subscription_Archive/sub-archive-controller');
 
@@ -53,7 +52,7 @@ const mongoUrl = process.env.MONGO_URL;
 app.use(
     session({
         secret: SESSION_SECRET_KEY,
-        store: new MongoStore({ client: mongoose.connection.getClient(), mongoUrl: mongoUrl, ttl: 30 * 24 * 60 * 60, autoRemove: 'native' }),
+        store: new MongoStore({ client: mongoose.connection.getClient(), mongoUrl: mongoUrl, ttl: 30 * 24 * 60 * 60, autoRemove: 'native'}),
         resave: false,
         saveUninitialized: true,
         cookie: {
@@ -80,7 +79,6 @@ app.use(orderRouter);
 app.use(orderArchiveRouter);
 app.use(stripeRouter);
 app.use(subCartRouter);
-app.use(deliveryRouter);
 app.use(subscriptionRouter);
 app.use(subArchiveRouter);
 

@@ -2,18 +2,23 @@ const LocationTracker = require('../Models/location-tracker-model');
 const DeletedUser = require('../Models/deleted-user-model');
 const BlockedUser = require('../Models/blocked-user-model');
 const { getAppUser } = require('../AppUser/appuser-service');
+const { retrieveOrderArchive } = require('../Order_Archive/order-archive-service');
 
 
 // SAVE USER'S SESSION ID AT THE TIME OF REGISTRATION
 const locationTracker = async (user, sessionId) => {
     const locationTracker = await LocationTracker.findOne({ userId: user._id });
 
-    if (!locationTracker) {
-        await LocationTracker.create({
-            userId: user.id,
+    if (!locationTracker || Object.values(locationTracker).length === 0) {
+        const result = await LocationTracker.create({
+            userId: user._id,
             email: user.email,
             locationId: sessionId ? sessionId : "location not found"
         });
+        return result;
+    }
+    else {
+        throw new Error("user's location already exist")
     }
 }
 
@@ -54,7 +59,7 @@ const clearLocationUsers = async () => {
 
 // SAVE DELETED USERS TO DB
 const saveDeletedUser = async (removedUser) => {
-    const delUser = await DeletedUser.findOne({ userId: removedUser._id});
+    const delUser = await DeletedUser.findOne({ userId: removedUser._id });
 
     if (!delUser) {
         await DeletedUser.create({
@@ -68,10 +73,10 @@ const saveDeletedUser = async (removedUser) => {
 // DEACTIVATE USER ACCOUNT
 const blockUserService = async (userId) => {
     let con = {};
-    
+
     const user = await getAppUser(userId);
 
-    const blockeduser = await BlockedUser.findOne({userId: user._id });
+    const blockeduser = await BlockedUser.findOne({ userId: user._id });
 
     if (blockeduser) {
         throw new Error("user already blocked");
@@ -102,13 +107,28 @@ const unblockUserService = async (userId) => {
     }
 
     await blockeduser.deleteOne();
-    
+
     con.unsealedUser = user;
 
     return con;
 
 }
 
+const clearOrdersFromArchive = async (userId) => {
+    const orderArchive = await retrieveOrderArchive(userId);
+
+    if (orderArchive.orders.length === 0) {
+        throw new Error("orders already cleared out");
+    }
+
+    orderArchive.set({
+        orders: []
+    })
+
+    await orderArchive.save();
+}
 
 
-module.exports = { locationTracker, saveDeletedUser, blockUserService, unblockUserService, removeFromLocation, clearAllDeletedUsers, clearLocationUsers }
+
+
+module.exports = { locationTracker, saveDeletedUser, blockUserService, unblockUserService, removeFromLocation, clearAllDeletedUsers, clearLocationUsers, clearOrdersFromArchive }

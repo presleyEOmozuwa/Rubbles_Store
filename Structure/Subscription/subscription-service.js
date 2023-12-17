@@ -1,5 +1,4 @@
 const { Subscription } = require('../Models/common-model');
-require('dotenv').config({path: "../../vars/.env"})
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const { three, five, seven } = require('../Utils/order-id-generator');
 
@@ -25,17 +24,20 @@ const createSub = async (user, checkoutSession) => {
         subNumber: `#${three()}-${five()}-${seven()}`
     })
 
-    await sub.save();
+    const extractSub = await sub.save();
 
-    return sub;
+    return extractSub;
 }
+
 
 const updateSub = async (user, checkoutSessionId) => {
     const sub = await retrieveSub(user._id);
 
     const session = await stripe.checkout.sessions.retrieve(checkoutSessionId);
 
-    const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent);
+    const invoice = await stripe.invoices.retrieve(session.invoice);
+
+    const paymentIntent = await stripe.paymentIntents.retrieve(invoice.payment_intent);
 
     const charge = await stripe.charges.retrieve(
         paymentIntent.latest_charge
@@ -52,17 +54,12 @@ const updateSub = async (user, checkoutSessionId) => {
 
     const modifiedSub = await sub.save();
 
-    if(!modifiedSub){
-        resetSub(user);
-        throw new Error("stripe subscription update failed")
-    }
-
     return modifiedSub;
 
 }
 
 
-const resetSub = async (user) => {
+const resetSubOrder = async (user) => {
     const userSub = await retrieveSub(user._id);
     userSub.set({
         stripecustomerid: "stripe customer id",
@@ -81,4 +78,4 @@ const resetSub = async (user) => {
 }
 
 
-module.exports = { createSub, getSub, retrieveSub, updateSub, resetSub }
+module.exports = { createSub, getSub, retrieveSub, updateSub, resetSubOrder }
