@@ -7,19 +7,21 @@ const { retrieveOrderArchive } = require('../Order_Archive/order-archive-service
 
 // SAVE USER'S SESSION ID AT THE TIME OF REGISTRATION
 const locationTracker = async (user, sessionId) => {
+    let result;
     const locationTracker = await LocationTracker.findOne({ userId: user._id });
 
     if (!locationTracker || Object.values(locationTracker).length === 0) {
-        const result = await LocationTracker.create({
+        result = await LocationTracker.create({
             userId: user._id,
             email: user.email,
             locationId: sessionId ? sessionId : "location not found"
         });
-        return result;
     }
     else {
         throw new Error("user's location already exist")
     }
+
+    return result;
 }
 
 // REMOVE USER LOCATION DATA

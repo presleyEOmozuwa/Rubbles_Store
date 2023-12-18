@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const locationTrackerSchema = new Schema({
     userId:{
         type: String,
-        default: "userId"
+        default: null
     },
     email:{
         type: String,

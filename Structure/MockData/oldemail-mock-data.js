@@ -11,10 +11,4 @@ const oldemaillist = [
     }
 ]
 
-const oldemail = {
-    _id: '5old191e810c19729de860e2',
-    email: "alexisomozuwa@gmail.com",
-    role: "client"
-}
-
-module.exports = { oldemaillist, oldemail }
+module.exports = { oldemaillist }

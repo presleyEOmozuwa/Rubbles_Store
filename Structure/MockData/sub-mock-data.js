@@ -56,18 +56,4 @@ const subscriptionlist = [
     }
 ]
 
-const subscription = {
-    _id: '5ors191e810c19729de860e2',
-    userId: '5u7f191e810c19729de860e3',
-    stripecustomerid: "stripeIdTwo",
-    orderNumber: "ordernumber002",
-    checkoutSessionId: "ordersession002",
-    cardType: "card type",
-    last4: "last 4 digits",
-    tax: 0.00,
-    paymentStatus: "unpaid",
-    orderTotal: 10.99,
-    subItems: [subProductOne]
-}
-
-module.exports = { subscriptionlist, subscription }
+module.exports = { subscriptionlist }

@@ -11,11 +11,4 @@ const locationlist = [
     }
 ]
 
-const location = {
-    _id: '5loc191e810c19729de860e1',
-    userId: '5u7f191e810c19729de860e2',
-    email: "wesleyomozuwa@gmail.com",
-    locationId: "location001"
-}
-
-module.exports = { locationlist, location }
+module.exports = { locationlist }

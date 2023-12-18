@@ -1,34 +1,26 @@
 
 const categorylist = [
     {
-        _id: '5c7f191e810c19729de860e1',
         catName: "Household",
         description: "Household item",
         ischecked: false,
-        products: ['5p7f191e810c19729de860e1']
+        products: []
     },
     {
         _id: '5c7f191e810c19729de860e2',
         catName: "Fashion",
         description: "Fashion item",
         ischecked: false,
-        products: ['5p7f191e810c19729de860e2']
+        products: []
     },
     {
         _id: '5c7f191e810c19729de860e3',
         catName: "Technology",
         description: "Technology item",
         ischecked: false,
-        products: ['5p7f191e810c19729de860e3', '5p7f191e810c19729de860e4']
+        products: []
     }
 ]
 
-const category = {
-    _id: '5c7f191e810c19729de860e2',
-    catName: "Fashion",
-    description: "Fashion item",
-    ischecked: false,
-    products: ['5p7f191e810c19729de860e2']
-}
 
-module.exports = { categorylist, category }
+module.exports = { categorylist }

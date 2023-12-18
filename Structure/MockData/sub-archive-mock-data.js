@@ -43,11 +43,5 @@ const subArchivelist = [
     }
 ]
 
-const subArchive = {
-    _id: '5suh191e810c19729de860e2',
-    userId: '5u7f191e810c19729de860e3',
-    subNames: ["Learn Asp.NetCore"],
-    subscriptions: [subTwo]
-}
 
-module.exports = { subArchivelist, subArchive }
+module.exports = { subArchivelist }

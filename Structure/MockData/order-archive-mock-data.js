@@ -76,10 +76,5 @@ const orderArchivelist = [
     }
 ]
 
-const orderArchive = {
-    _id: '5orh191e810c19729de860e2',
-    userId: '5u7f191e810c19729de860e3',
-    orders: [orderTwo]
-}
 
-module.exports = { orderArchivelist, orderArchive }
+module.exports = { orderArchivelist }

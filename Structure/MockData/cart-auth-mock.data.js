@@ -1,3 +1,4 @@
+
 const cartlist = [
     {
         userId: null,
@@ -11,16 +12,5 @@ const cartlist = [
     }
 ]
 
-const cartOne = {
-    userId: null,
-    description: "description",
-    products: []
-}
 
-const cartTwo = {
-    userId: null,
-    description: "description",
-    products: []
-}
-
-module.exports = { cartlist, cartOne, cartTwo }
+module.exports = { cartlist }

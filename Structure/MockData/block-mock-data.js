@@ -1,5 +1,5 @@
 const blockedlist = [
-    {
+    {   
         _id: '5blk191e810c19729de860e1',
         userId: '5u7f191e810c19729de860e2',
         email: "wesleyomozuwa@gmail.com",
@@ -13,11 +13,4 @@ const blockedlist = [
     }
 ]
 
-const blocked = {
-    _id: '5blk191e810c19729de860e1',
-    userId: '5u7f191e810c19729de860e2',
-    email: "wesleyomozuwa@gmail.com",
-    role: "client"
-}
-
-module.exports = { blockedlist, blocked }
+module.exports = { blockedlist }

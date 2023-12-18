@@ -48,7 +48,7 @@ describe("Register.js", () => {
             terms: true
         }
         await DeletedUser.create(deletedlist);
-        
+
         expect(async () => await register(payload)).rejects.toThrow("email cannot be used, account closed")
     })
 
@@ -77,8 +77,8 @@ describe("Register.js", () => {
 
         jest.spyOn(bcrypt, 'hash').mockResolvedValueOnce(null);
 
-        expect(async () => await register(payload)).rejects.toThrow("client password hash unsuccessful"); 
-    
+        expect(async () => await register(payload)).rejects.toThrow("client password hash unsuccessful");
+
     })
 
     it("should throw an error when inserting user into the database fails", async () => {
@@ -114,14 +114,13 @@ describe("Register.js", () => {
         await User.create(userlist);
 
         jest.spyOn(bcrypt, 'hash').mockResolvedValueOnce("hash#hensley002");
-        
+
         stripeCustomer.mockResolvedValueOnce({ id: "stripeFive" })
 
-        await register(payload);
+        const user = await register(payload);
 
         const users = await User.find();
-        expect(users.length).toBe(5)
-
+        expect(users).toHaveLength(5)
     })
 
     it("should save user's session id info on database", async () => {
@@ -134,20 +133,23 @@ describe("Register.js", () => {
 
         await DeletedUser.create(deletedlist);
         await User.create(userlist);
+        await LocationTracker.create(locationlist);
 
         jest.spyOn(bcrypt, 'hash').mockResolvedValueOnce("hash#hensley002");
-        
+
         stripeCustomer.mockResolvedValueOnce({ id: "stripeFive" })
 
         const sessionId = "session005";
+
         const user = await register(payload);
+        const doc = await locationTracker(user.normalUser, sessionId)
 
-        await LocationTracker.create(locationlist);
-        await locationTracker(user.normalUser, sessionId)
-        
-        const locations = await LocationTracker.find();
-        expect(locations.length).toBe(3)
+        const savedSessionslist = await LocationTracker.find();
 
+        expect(doc).toBeDefined();
+        expect(savedSessionslist).toHaveLength(3)
+        expect(doc.email).toEqual(user.normalUser.email);
+        expect(doc.locationId).toEqual(sessionId);
     })
 
     it("should assign a shopping cart to a registered user", async () => {
@@ -162,17 +164,18 @@ describe("Register.js", () => {
         await User.create(userlist);
 
         jest.spyOn(bcrypt, 'hash').mockResolvedValueOnce("hash#hensley002");
-        
+
         stripeCustomer.mockResolvedValueOnce({ id: "stripeFive" })
 
         const user = await register(payload);
         await Cart.create(cartlist);
-        
+
         const assignedCart = await assignCartToUser(user.normalUser);
-        
-        const list = await Cart.find()
-        
-        expect(list.length).toBe(3);
+
+        const carts = await Cart.find()
+
+        expect(assignedCart).toBeDefined();
+        expect(carts).toHaveLength(3);
         expect(assignedCart.userId).toEqual(user.normalUser._id);
     })
 })

@@ -1,23 +1,14 @@
 const subcartlist = [
     {
-        _id: '5sub191e810c19729de860e1',
-        userId: '5u7f191e810c19729de860e2',
+        userId: null,
         description: "description",
-        subItems: ['5p7f191e810c19729de860e3']
+        subItems: []
     },
     {
-        _id: '5sub191e810c19729de860e2',
-        userId: '5u7f191e810c19729de860e3',
+        userId: null,
         description: "description",
-        subItems: ['5p7f191e810c19729de860e4']
+        subItems: []
     }
 ]
 
-const subcart = {
-    _id: '5sub191e810c19729de860e1',
-    userId: '5u7f191e810c19729de860e3',
-    description: "description",
-    subItems: ['5p7f191e810c19729de860e3']
-}
-
-module.exports = { subcartlist, subcart }
+module.exports = { subcartlist }
