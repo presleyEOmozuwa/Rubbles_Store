@@ -20,31 +20,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm i    
-    - name: Create env file    
-      run: |
-        touch .env
-        echo  PORT=${{ secrets.PORT }} >> .env
-        echo  ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }} >> .env
-        echo  SIGNING_SECRET=${{ secrets.SIGNING_SECRET }} >> .env
-        echo  JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} >> .env
-        echo  EASYPOST_API_KEY=${{ secrets.EASYPOST_API_KEY }} >> .env
-        echo  MONGODB_URL=${{ secrets.MONGODB_URL }} >> .env
-        echo  MAILTRAP_HOST=${{ secrets.MAILTRAP_HOST }} >> .env
-        echo  MAILTRAP_PORT=${{ secrets.MAILTRAP_PORT }} >> .env
-        echo  MAILTRAP_USER=${{ secrets.MAILTRAP_USER }} >> .env
-        echo  MAILTRAP_PASSWORD=${{ secrets.MAILTRAP_PASSWORD }} >> .env
-        echo  CLIENT_BASE_URL=${{ secrets.CLIENT_BASE_URL }} >> .env
-        echo  WHSEC=${{ secrets.WHSEC }} >> .env
-        echo  STRIPE_KEY=${{ secrets.STRIPE_KEY }} >> .env
-        echo  SESSION_SECRET_KEY=${{ secrets.SESSION_SECRET_KEY }} >> .env
-        echo  ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }} >> .env
-        echo  REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }} >> .env
-        echo  REFRESH_TOKEN_KEYPLUS=${{ secrets.REFRESH_TOKEN_KEYPLUS }} >> .env
-        echo  PASSWORD_RESET_TOKEN_KEY=${{ secrets.PASSWORD_RESET_TOKEN_KEY }} >> .env
-        echo  EMAIL_TOKEN_KEY=${{ secrets.EMAIL_TOKEN_KEY }} >> .env
-        cat .env
-    - run: node server.js
+    - run: npm ci    
+    - run: npm run build --if-present
+    - run: node app.js
 
   tests:
     runs-on: ubuntu-latest
@@ -58,28 +36,5 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm i    
-    - name: Create env file
-      run: |
-        touch .env
-        echo  PORT=${{ secrets.PORT }} >> .env
-        echo  ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }} >> .env
-        echo  SIGNING_SECRET=${{ secrets.SIGNING_SECRET }} >> .env
-        echo  JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} >> .env
-        echo  EASYPOST_API_KEY=${{ secrets.EASYPOST_API_KEY }} >> .env
-        echo  MONGODB_URL=${{ secrets.MONGODB_URL }} >> .env
-        echo  MAILTRAP_HOST=${{ secrets.MAILTRAP_HOST }} >> .env
-        echo  MAILTRAP_PORT=${{ secrets.MAILTRAP_PORT }} >> .env
-        echo  MAILTRAP_USER=${{ secrets.MAILTRAP_USER }} >> .env
-        echo  MAILTRAP_PASSWORD=${{ secrets.MAILTRAP_PASSWORD }} >> .env
-        echo  CLIENT_BASE_URL=${{ secrets.CLIENT_BASE_URL }} >> .env
-        echo  WHSEC=${{ secrets.WHSEC }} >> .env
-        echo  STRIPE_KEY=${{ secrets.STRIPE_KEY }} >> .env
-        echo  SESSION_SECRET_KEY=${{ secrets.SESSION_SECRET_KEY }} >> .env
-        echo  ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }} >> .env
-        echo  REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }} >> .env
-        echo  REFRESH_TOKEN_KEYPLUS=${{ secrets.REFRESH_TOKEN_KEYPLUS }} >> .env
-        echo  PASSWORD_RESET_TOKEN_KEY=${{ secrets.PASSWORD_RESET_TOKEN_KEY }} >> .env
-        echo  EMAIL_TOKEN_KEY=${{ secrets.EMAIL_TOKEN_KEY }} >> .env
-        cat .env    
+    - run: npm ci    
     - run: npm run test
