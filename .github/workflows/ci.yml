@@ -43,7 +43,7 @@ jobs:
         echo  REFRESH_TOKEN_KEYPLUS=${{ secrets.REFRESH_TOKEN_KEYPLUS }} >> .env
         echo  PASSWORD_RESET_TOKEN_KEY=${{ secrets.PASSWORD_RESET_TOKEN_KEY }} >> .env
         echo  EMAIL_TOKEN_KEY=${{ secrets.EMAIL_TOKEN_KEY }} >> .env
-    - run: node app.js
+    - run: node server.js
 
   tests:
     runs-on: ubuntu-latest
