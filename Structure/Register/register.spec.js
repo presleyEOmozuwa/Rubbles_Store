@@ -1,4 +1,4 @@
-const { expect, it } = require('@jest/globals');
+const { expect, it} = require('@jest/globals');
 const bcrypt = require('bcrypt');
 const { connect, clearDatabase, closeDatabase } = require('../../config/connector');
 const { register } = require('./register-service');
