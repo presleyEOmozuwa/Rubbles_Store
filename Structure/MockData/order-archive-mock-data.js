@@ -1,3 +1,5 @@
+
+
 const orderOne = {
     _id: '5orf191e810c19729de860e1',
     userId: '5u7f191e810c19729de860e2',
@@ -27,7 +29,7 @@ const orderOne = {
     },
     paymentStatus: "unpaid",
     orderTotal: 10.99,
-    cartItems: [productOne, productTwo]
+    cartItems: []
 }
 
 const orderTwo = {
@@ -59,20 +61,20 @@ const orderTwo = {
     },
     paymentStatus: "unpaid",
     orderTotal: 10.99,
-    cartItems: [productTwo]
+    cartItems: []
 }
 
 
 const orderArchivelist = [
     {
-        _id: '5orh191e810c19729de860e1',
-        userId: '5u7f191e810c19729de860e2',
-        orders: [orderOne, orderTwo]
+        userId: null,
+        email: "wesleyomozuwa@gmail",
+        orders: []
     },
     {
-        _id: '5orh191e810c19729de860e2',
-        userId: '5u7f191e810c19729de860e3',
-        orders: [orderTwo]
+        userId: null,
+        email: "alexisomozuwa@gmail.com",
+        orders: []
     }
 ]
 

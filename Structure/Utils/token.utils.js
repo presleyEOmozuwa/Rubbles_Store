@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const RefreshToken = require('../Models/refreshToken-model');
 const { getRefreshToken, retrieveRefreshToken } = require('../Token/refreshToken-service');
@@ -6,7 +7,7 @@ const { OAuth2Client } = require('google-auth-library');
 
 
 const signAccessToken = (user) => {
-    const key = process.env.ACCESS_TOKEN_KEY;
+    const key = `${process.env.ACCESS_TOKEN_KEY}`;
     const payload = {
         user: {
             id: user._id,
@@ -112,16 +113,14 @@ const passwordResetToken = (user) => {
 
 const saveRefreshToken = async (user, token) => {
     const doc = await retrieveRefreshToken(user._id);
-    if (doc.refreshtoken !== token) {
+    if (!doc.refreshtoken || doc.refreshtoken !== token) {
         doc.set({
             refreshtoken: token
         })
 
         await doc.save();
     }
-    else {
-        throw new Error("refresh token already exist")
-    }
+    return;
 }
 
 const verifyGoogleToken = async (clientId, jwtToken) => {
@@ -132,7 +131,6 @@ const verifyGoogleToken = async (clientId, jwtToken) => {
     });
 
     const payload = ticket.getPayload();
-
     return payload;
 }
 
@@ -167,15 +165,14 @@ const emailToken = (user) => {
 
 const refreshTokenStore = async (user) => {
     const doc = await getRefreshToken(user._id);
-
     if (!doc) {
-        await RefreshToken.create({
-            userId: user._id
+        const result = await RefreshToken.create({
+            userId: user._id,
+            email: user.email
         })
+        return result;
     }
-    else {
-        throw new Error("refresh token store already exist")
-    }
+    return;
 }
 
 

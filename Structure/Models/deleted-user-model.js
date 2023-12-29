@@ -8,8 +8,7 @@ const deletedUserSchema = new Schema({
     },
     email:{
         type: String,
-        unique: true,
-        default: "email"
+        default: null
     },
     username:{
         type: String,

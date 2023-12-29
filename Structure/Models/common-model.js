@@ -71,6 +71,10 @@ const Product = model('Product', productSchema);
 
 const cartSchema = new Schema({
     userId: { type: ObjectId, ref: 'User', default: null },
+    email: {
+        type: String,
+        default: null
+    },
     description: {
         type: String,
         default: "cart assigned to user"
@@ -83,6 +87,11 @@ const Cart = model('Cart', cartSchema);
 
 const subCartSchema = new Schema({
     userId: { type: ObjectId, ref: 'User', default: null},
+
+    email: {
+        type: String,
+        default: null
+    },
 
     description: {
         type: String,
@@ -142,6 +151,10 @@ const customerAddressSchema = new Schema({
 
 const subSchema = new Schema({
     userId: { type: ObjectId, ref: 'User', default: null },
+    email: {
+        type: String,
+        default: null
+    },
 
     stripecustomerid: {
         type: String,
@@ -179,7 +192,10 @@ const Subscription = model('Subscription', subSchema);
 
 const orderSchema = new Schema({
     userId: { type: ObjectId, ref: 'User', default: null },
-
+    email: {
+        type: String,
+        default: null
+    },
     stripecustomerid: {
         type: String,
         default: "stripe customer id"
@@ -237,6 +253,10 @@ const Order = model('Order', orderSchema);
 
 const orderArchiveSchema = new Schema({
     userId: { type: ObjectId, ref: 'User', default: null },
+    email: {
+        type: String,
+        default: null
+    },
     
     orders: [{ type: orderSchema, default: { } }]
 
@@ -247,7 +267,10 @@ const OrderArchive = model('OrderArchive', orderArchiveSchema);
 
 const subArchiveSchema = new Schema({
     userId: { type: ObjectId, ref: 'User', default: null },
-
+    email: {
+        type: String,
+        default: null
+    },
     subNames: [String],
     
     subscriptions: [{ type: subSchema, default: { } }]

@@ -1,6 +1,5 @@
 const productlist = [
     {
-        _id: '5p7f191e810c19729de860e1',
         prodName: "Sofa",
         price: 1250,
         coupon: 50,
@@ -9,10 +8,9 @@ const productlist = [
         quantity: 1,
         stockQty: 10,
         typeOfItem: "regular",
-        categories: ['5c7f191e810c19729de860e1']
+        categories: []
     },
     {
-        _id: '5p7f191e810c19729de860e2',
         prodName: "Sneakers",
         price: 1150,
         coupon: 20,
@@ -21,10 +19,9 @@ const productlist = [
         quantity: 1,
         stockQty: 10,
         typeOfItem: "regular",
-        categories: ['5c7f191e810c19729de860e2']
+        categories: []
     },
     {
-        _id: '5p7f191e810c19729de860e3',
         prodName: "Learn React",
         price: 15,
         coupon: 0,
@@ -33,10 +30,9 @@ const productlist = [
         quantity: 1,
         stockQty: 0,
         typeOfItem: "subscription",
-        categories: ['5c7f191e810c19729de860e3']
+        categories: []
     },
     {
-        _id: '5p7f191e810c19729de860e4',
         prodName: "Learn Asp.NetCore",
         price: 25,
         coupon: 0,
@@ -45,34 +41,9 @@ const productlist = [
         quantity: 1,
         stockQty: 0,
         typeOfItem: "subscription",
-        categories: ['5c7f191e810c19729de860e3']
+        categories: []
     }
 ]
 
-const productOne = {
-    _id: '5p7f191e810c19729de860e1',
-    prodName: "Sofa",
-    price: 1250,
-    coupon: 50,
-    newPrice: 1200,
-    priceId: "stripepriceId",
-    quantity: 1,
-    stockQty: 10,
-    categories: ['5c7f191e810c19729de860e1']
-}
 
-const productTwo = {
-    _id: '5p7f191e810c19729de860e2',
-    prodName: "Sneakers",
-    price: 1150,
-    coupon: 20,
-    newPrice: 1130,
-    priceId: "not applicable",
-    quantity: 1,
-    stockQty: 10,
-    typeOfItem: "regular",
-    categories: ['5c7f191e810c19729de860e2']
-}
-
-
-module.exports = { productlist, productOne, productTwo }
+module.exports = { productlist }

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getProduct } = require('../Product/product-service');
+const { objCheckerOne } = require('../Utils/obj-checker-utils');
 
 // router.post('/api/addtocart/guestUser', async (req, res) => {
 //     try {
@@ -32,22 +33,46 @@ const { getProduct } = require('../Product/product-service');
 
 // })
 
+// router.post('/api/addtocart/guestUser', async (req, res) => {
+//     try {
+//         // SETTING AN ARRAY IN SESSION TO HOLD GUEST PRODUCTS
+//         req.session.products = [];
+//         const product = await getProduct(req.body.productId);
+//         console.log(req.sessionID);
+//         console.log(req.session.id);
+//         console.log(req.session.products);
+
+//         // IF ARRAY IS EMPTY, ADD PRODUCT
+//         if (!req.session.products.includes(product) ) {
+//             req.session.products.push(product);
+//             res.send({ "status": "product successfully added to cart" });
+//         }
+//         else{
+//             throw new Error("product already exist on cart")
+//         }
+
+//     }
+//     catch (err) {
+//         res.status(400).send({ error: err.message });
+//     }
+
+// })
+
 router.post('/api/addtocart/guestUser', async (req, res) => {
     try {
         // SETTING AN ARRAY IN SESSION TO HOLD GUEST PRODUCTS
         req.session.products ??= [];
-
         const product = await getProduct(req.body.productId);
-
-        // IF ARRAY IS EMPTY, ADD PRODUCT
-        if (!req.session.products.includes(product) ) {
+        const found = req.session.products.find((item) => item._id === product._id); 
+        
+        if(!found || objCheckerOne(found) === 0){
             req.session.products.push(product);
+            console.log(req.sessionStore);
             res.send({ "status": "product successfully added to cart" });
         }
         else{
-            throw new Error("product already exist on cart")
+            throw new Error("product already exist");
         }
-
     }
     catch (err) {
         res.status(400).send({ error: err.message });

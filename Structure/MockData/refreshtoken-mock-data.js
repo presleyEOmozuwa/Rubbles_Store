@@ -1,13 +1,13 @@
 const refreshtokenlist = [
     {
-        _id: '5tok191e810c19729de860e1',
-        userId: '5u7f191e810c19729de860e2',
-        refreshtoken: "refreshtoken001"
+        userId: null,
+        email: "wesleyomozuwa@gmail.com",
+        refreshtoken: "refresh001"
     },
     {
-        _id: '5tok191e810c19729de860e2',
-        userId: '5u7f191e810c19729de860e3',
-        refreshtoken: "refreshtoken002"
+        userId: null,
+        email: "alexisomozuwa@gmail.com",
+        refreshtoken: "refresh002"
     }
 ]
 

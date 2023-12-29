@@ -7,11 +7,12 @@ const { validationSchema } = require('../Utils/register-validation-utils');
 const { stripeCustomer } = require('./register-helper');
 const { objCheckerOne, objCheckerTwo } = require('../Utils/obj-checker-utils');
 
+
 const register = async (payload) => {
-    let con = {};
+    let createdUser;
 
     if (!payload || objCheckerOne(payload) === 0) {
-        throw new Error("data not found");
+        throw new Error("please provide required fields");
     }
 
 
@@ -25,9 +26,9 @@ const register = async (payload) => {
 
     if (value) {
         const deleteUser = await DeletedUser.findOne({ email: value.email });
-        
+
         if (deleteUser && objCheckerTwo(deleteUser) > 0) {
-            throw new Error("email cannot be used, account closed");
+            throw new Error("email cannot be used for registration, it is associated to a deleted account");
         }
 
         const user = await User.findOne({ email: value.email });
@@ -37,16 +38,16 @@ const register = async (payload) => {
 
 
         const hashedPassword = await bcrypt.hash(value.password, 10)
-
-        if (!hashedPassword) {
-            throw new Error("client password hash unsuccessful");
+        
+        if(!hashedPassword){
+            throw new Error("password hashing failed")
         }
 
         // CREATE CLIENT ON STRIPE
         const customer = await stripeCustomer(value.email);
 
         // CREATE CLIENT ACCOUNT
-        const normalUser = await User.create({
+        createdUser = await User.create({
             username: value.username,
             email: value.email,
             password: hashedPassword,
@@ -55,16 +56,13 @@ const register = async (payload) => {
             terms: value.terms
         });
 
-
-        if (!normalUser || objCheckerOne(normalUser) === 0) {
-            throw new Error("normal registration failed");
+        if (!createdUser || objCheckerOne(createdUser) === 0) {
+            throw new Error("Sorry, try again later");
         }
-
-        con.normalUser = normalUser;
 
     }
 
-    return con;
+    return createdUser;
 }
 
 

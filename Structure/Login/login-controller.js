@@ -5,7 +5,7 @@ const stripe = require('stripe')(process.env.STRIPE_KEY);
 const { getAppUser } = require('../AppUser/appuser-service');
 const { signAccessToken, signRefreshToken, signRefreshTokenPlus, verifyRefreshToken, resetRefreshToken, verifyGoogleToken, saveRefreshToken } = require('../Utils/token.utils');
 const { loginUser } = require('./login-service');
-const { generateOTPSecret, generateOTP, saveOTPSecret, getOTPSecret } = require('../Utils/secret-keys-utils');
+const { generateOTPSecret, generateOTP } = require('../Utils/secret-keys-utils');
 const User = require('../Models/user-model');
 const LocationTracker = require('../Models/location-tracker-model');
 const { assignCartToUser } = require('../Utils/cart-util');
@@ -15,25 +15,20 @@ const { loginChecker } = require('./login-helper');
 // REQUEST TO LOGIN
 router.post("/api/login/payload", async (req, res) => {
     try {
-        const { email, password, rememberMe, useToken } = req.body.payload;
-
-        const { authUser } = await loginUser(email, password);
+        const authUser = await loginUser(req.body.email, req.body.password);
 
         const secretKey = generateOTPSecret();
+        authUser.set({
+            otpsecret: secretKey
+        })
 
-        await saveOTPSecret(authUser, secretKey);
+        const updateduser = await authUser.save();
 
-        const otpSecretKey = await getOTPSecret(authUser);
+        const otp = await generateOTP(updateduser.otpsecret);
 
-        const otp = await generateOTP(otpSecretKey);
+        console.log(updateduser);
 
-        const location = await LocationTracker.findOne({
-            userId: authUser._id,
-            locationId: req.session.id,
-            email: authUser.email
-        });
-
-        await loginChecker(authUser, useToken, location, rememberMe, res, otp);
+        await loginChecker(updateduser, req.body.useToken, req.sessionID, req.body.rememberMe, res, otp);
 
     }
     catch (err) {
@@ -61,7 +56,7 @@ router.post("/api/otp-code", async (req, res) => {
 
     }
     catch (err) {
-        res.status(500).send({ error: err.message });
+        res.status(400).send({ error: err.message });
     }
 
 });
@@ -71,7 +66,6 @@ router.post("/api/google-signin", async (req, res) => {
     try {
         // VERIFY GOOGLE CREDENTIALS
         const { clientId, token } = req.body.payload
-
         const payload = await verifyGoogleToken(clientId, token);
 
         if (!payload) {

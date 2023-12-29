@@ -5,15 +5,14 @@ const { getOrderArchive, retrieveOrderArchive } = require('../Order_Archive/orde
 
 const assignOrderStoreToUser = async (user) => {
     const order = await getOrder(user._id);
-
     if (!order) {
-        await Order.create({
-            userId: user._id
+        const result = await Order.create({
+            userId: user._id,
+            email: user.email
         })
+        return result;
     }
-    else {
-        throw new Error("order already exist")
-    }
+    return;
 }
 
 
@@ -21,13 +20,13 @@ const assignOrderArchiveToUser = async (user) => {
     const orderArchive = await getOrderArchive(user._id);
 
     if (!orderArchive) {
-        await OrderArchive.create({
-            userId: user._id
+        const result = await OrderArchive.create({
+            userId: user._id,
+            email: user.email
         })
+        return result;
     }
-    else {
-        throw new Error("order archive already exist")
-    }
+    return;
 }
 
 const addOrderToOrderArchive = async (user, updatedOrder) => {

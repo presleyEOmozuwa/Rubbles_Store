@@ -8,7 +8,7 @@ const locationTrackerSchema = new Schema({
     },
     email:{
         type: String,
-        default: "email"
+        default: null
     },
     locationId:{
         type: String,

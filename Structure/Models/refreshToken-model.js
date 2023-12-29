@@ -3,12 +3,15 @@ const { Schema, model } = mongoose;
 const { ObjectId } = Schema.Types;
 
 const refreshTokenSchema = new Schema({
-    userId: { type: ObjectId, ref: 'User', required: true },
+    userId: { type: ObjectId, ref: 'User', default: null },
+    email: {
+        type: String,
+        default: null
+    },
     
     refreshtoken: {
         type: String,
-        default: "refresh token",
-        unique: true
+        default: null
     }
 
 }, { timestamps: true});

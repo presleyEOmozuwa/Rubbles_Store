@@ -11,6 +11,7 @@ const { verifyAccessToken } = require('../Utils/token.utils');
 // REQUEST TO CREATE PRODUCT
 router.post('/api/product-form/payload', async (req, res) => {
     try {
+
         const decodedToken = await verifyAccessToken(req.headers["authorization"]);
 
         const adminId = decodedToken.user.id;

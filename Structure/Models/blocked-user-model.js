@@ -8,8 +8,7 @@ const blockedUserSchema = new Schema({
     },
     email:{
         type: String,
-        required: true,
-        unique: true,
+        default: null
     },
     role:{
         type: String,

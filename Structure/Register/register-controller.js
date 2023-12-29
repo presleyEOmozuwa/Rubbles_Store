@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { register } = require('./register-service');
-const { assignCartToUser, sessionProductshandler } = require('../Utils/cart-util');
+const { assignCartToUser, sessionProductsHandler } = require('../Utils/cart-util');
 const { assignSubCartToUser } = require('../Utils/cart-subitems-utils');
 const { assignOrderArchiveToUser, assignOrderStoreToUser } = require('../Utils/order-utils');
 const { refreshTokenStore } = require('../Utils/token.utils');
@@ -13,32 +13,29 @@ const {  assignSubscriptionToUser, assignSubArchiveToUser } = require('../Utils/
 router.post('/api/register', async (req, res) => {
     try {
         // REGISTERED USER RETURNED
-        const { normalUser } = await register(req.body.payload);
+        const createdUser = await register(req.body.payload);
 
-        await locationTracker(normalUser, req.session.id);
+        await locationTracker(createdUser, req.sessionID);
         
-        await assignCartToUser(normalUser);
+        await assignCartToUser(createdUser);
 
-        await assignSubCartToUser(normalUser);
+        await assignSubCartToUser(createdUser);
 
-        const { products } = req.session;
-        await sessionProductshandler(products, normalUser);
+        await sessionProductsHandler(req.session.products, createdUser, req)
+    
+        await refreshTokenStore(createdUser);
+
+        await assignOrderStoreToUser(createdUser);
         
-        req.session.destroy();
-        
-        await refreshTokenStore(normalUser);
+        await assignOrderArchiveToUser(createdUser);
 
-        await assignOrderStoreToUser(normalUser);
-        
-        await assignOrderArchiveToUser(normalUser);
+        await assignSubscriptionToUser(createdUser);
 
-        await assignSubscriptionToUser(normalUser);
+        await assignSubArchiveToUser(createdUser);
 
-        await assignSubArchiveToUser(normalUser);
-        
-        await sendEmailToUser(normalUser);
+        const result = await sendEmailToUser(createdUser);
 
-        res.send({ "status": "client registration successful", "isRegistered": true });
+        res.send({ "status": "client registration successful", "isRegistered": true, "sessionId": req.sessionID, "emailServer": result});
     
     } 
     catch (err) {

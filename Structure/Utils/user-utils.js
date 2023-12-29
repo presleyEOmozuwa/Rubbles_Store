@@ -7,30 +7,27 @@ const { retrieveOrderArchive } = require('../Order_Archive/order-archive-service
 
 // SAVE USER'S SESSION ID AT THE TIME OF REGISTRATION
 const locationTracker = async (user, sessionId) => {
-    let result;
-    const locationTracker = await LocationTracker.findOne({ userId: user._id });
+    const locationTracker = await LocationTracker.findOne({ email: user.email });
 
     if (!locationTracker || Object.values(locationTracker).length === 0) {
-        result = await LocationTracker.create({
+        const result = await LocationTracker.create({
             userId: user._id,
             email: user.email,
             locationId: sessionId ? sessionId : "location not found"
         });
-    }
-    else {
-        throw new Error("user's location already exist")
+        return result;
     }
 
-    return result;
+    return;
 }
 
 // REMOVE USER LOCATION DATA
 const removeFromLocation = async (removedUser) => {
     const location = await LocationTracker.findOne({ userId: removedUser._id });
-
     if (location) {
         await location.deleteOne();
     }
+    return;
 }
 
 // CLEAR OUT ALL DELETED USERS
@@ -70,6 +67,9 @@ const saveDeletedUser = async (removedUser) => {
             username: removedUser.username
         })
     }
+
+    return delUser;
+
 }
 
 // DEACTIVATE USER ACCOUNT

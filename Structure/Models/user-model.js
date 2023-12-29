@@ -18,7 +18,7 @@ const userSchema = new Schema({
     email:{
         type: String,
         unique: true,
-        default: "email"
+        default: null
     },
     
     password:{
@@ -44,6 +44,11 @@ const userSchema = new Schema({
     isblocked:{
         type: String,
         default: "false"
+    },
+
+    isloggedIn: {
+        type: Boolean,
+        default: false
     },
     
     otpsecret: {

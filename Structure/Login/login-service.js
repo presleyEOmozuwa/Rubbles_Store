@@ -1,49 +1,42 @@
 const bcrypt = require('bcrypt');
-require('dotenv').config({ path: "../../vars/.env" });
 const User = require('../Models/user-model');
 const DeletedUser = require('../Models/deleted-user-model');
 const BlockedUser = require('../Models/blocked-user-model');
 
 
-
 const loginUser = async (email, password) => {
-    let con = { };
-
-    if(!email && !password){
-        throw new Error("login data not found");
+    
+    if(!email || !password){
+        throw new Error("email and password fields are required");
     }
 
     const delUser = await DeletedUser.findOne({ email: email });
     
-
     if(delUser){
-        throw new Error("user account is closed");
+        throw new Error("email is associated to a closed account");
     }
 
     const blockeduser = await BlockedUser.findOne({ email: email });
 
     if(blockeduser){
-        throw new Error("user account has been blocked");
+        throw new Error("email is associated to a blocked account");
     }
 
     // FIND USER BY EMAIL
-    const user = await User.findOne({ email: email });
+    const authUser = await User.findOne({ email: email });
     
-    
-    if(!user){
+    if(!authUser){
         throw new Error("invalid email or password");
     }
 
     // IF USER FOUND, VERIFY PASSWORD
-    const comparePassword = await bcrypt.compare(password, user.password);
+    const comparePassword = await bcrypt.compare(password, authUser.password);
 
     if(!comparePassword){
         throw new Error("invalid email or password");
     }
 
-    con.authUser = user;
-    
-    return con;
+    return authUser;
 }
 
 

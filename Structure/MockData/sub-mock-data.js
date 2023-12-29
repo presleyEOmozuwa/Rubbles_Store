@@ -27,8 +27,8 @@ const subProductTwo = {
 
 const subscriptionlist = [
     {
-        _id: '5ors191e810c19729de860e1',
-        userId: '5u7f191e810c19729de860e2',
+        userId: null,
+        email: "wesleyomozuwa@gmail.com",
         stripecustomerid: "stripeIdOne",
         subNumber: "subnumber001",
         checkoutSessionId: "ordersession001",
@@ -38,11 +38,11 @@ const subscriptionlist = [
         tax: 0.00,
         paymentStatus: "unpaid",
         orderTotal: 10.99,
-        subItems: [subProductOne, subProductTwo]
+        subItems: []
     },
     {
-        _id: '5ors191e810c19729de860e2',
-        userId: '5u7f191e810c19729de860e3',
+        userId: null,
+        email: "alexisomozuwa@gmail.com",
         stripecustomerid: "stripeIdTwo",
         subNumber: "subnumber002",
         checkoutSessionId: "ordersession002",
@@ -52,7 +52,7 @@ const subscriptionlist = [
         tax: 0.00,
         paymentStatus: "unpaid",
         orderTotal: 10.99,
-        subItems: [subProductOne]
+        subItems: []
     }
 ]
 

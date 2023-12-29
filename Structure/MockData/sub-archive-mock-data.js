@@ -1,5 +1,4 @@
 const subOne = {
-    _id: '5ors191e810c19729de860e1',
     userId: '5u7f191e810c19729de860e2',
     stripecustomerid: "stripeIdOne",
     subNumber: "subnumber001",
@@ -10,11 +9,10 @@ const subOne = {
     tax: 0.00,
     paymentStatus: "unpaid",
     orderTotal: 10.99,
-    subItems: [subProductOne, subProductTwo]
+    subItems: []
 }
 
 const subTwo = {
-    _id: '5ors191e810c19729de860e2',
     userId: '5u7f191e810c19729de860e3',
     stripecustomerid: "stripeIdTwo",
     subNumber: "subnumber002",
@@ -25,21 +23,21 @@ const subTwo = {
     tax: 0.00,
     paymentStatus: "unpaid",
     orderTotal: 10.99,
-    subItems: [subProductOne]
+    subItems: []
 }
 
 const subArchivelist = [
     {
-        _id: '5suh191e810c19729de860e1',
-        userId: '5u7f191e810c19729de860e2',
+        userId: null,
+        email: "wesleyomozuwa@gmail.com",
         subNames: ["Learn React", "Learn Asp.NetCore"],
-        subscriptions: [subOne, subTwo]
+        subscriptions: []
     },
     {
-        _id: '5suh191e810c19729de860e2',
-        userId: '5u7f191e810c19729de860e3',
+        userId: null,
+        email: "alexisomozuwa@gmail.com",
         subNames: ["Learn Asp.NetCore"],
-        subscriptions: [subTwo]
+        subscriptions: []
     }
 ]
 

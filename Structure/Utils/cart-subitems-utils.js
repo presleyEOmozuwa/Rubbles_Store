@@ -6,14 +6,13 @@ const { objCheckerOne } = require('./obj-checker-utils');
 const assignSubCartToUser = async (user) => {
     const subcart = await getSubCart(user._id);
     if (!subcart || objCheckerOne(subcart) === 0) {
-        await SubCart.create({
-            userId: user._id
+        const result =  await SubCart.create({
+            userId: user._id,
+            email: user.email
         })
+        return result;
     }
-    else {
-        throw new Error("user's subcart already exist")
-    }
-
+    return;
 }
 
 const addProductToSubCart = async (subcartId, product) => {
