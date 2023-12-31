@@ -62,6 +62,3 @@ app.use(stripeRouter);
 app.use(subCartRouter);
 app.use(subscriptionRouter);
 app.use(subArchiveRouter);
-
-
-module.exports = app
