@@ -1,14 +1,31 @@
 const { Product } = require('../Models/common-model');
 
 // GET ALL PRODUCTS
-const getProducts = async () => {
-    const products = await Product.find({ typeOfItem: "regular" });
+const getProductlist = async (count, page) => {
+    if(!count || !page ){
+        throw new Error("missing query parameters");
+    }
+
+    const countInt = parseInt(count);
+    const pageInt = parseInt(page);
+    const offset = countInt * pageInt;
+
+    if(isNaN(countInt) || isNaN(pageInt)){
+        throw new Error("invalid value for query parameters");
+    }
+
+    if(countInt <= 0 || pageInt < 0){
+        throw new Error("query parameters cannot be negative values");
+    }
+
+    const products = await Product.find({ typeOfItem: "regular" }).limit(countInt).skip(offset);
 
     if (!products) {
         throw new Error("product list request failed");
     }
 
     return products;
+
 }
 
 // GET ALL PRODUCTS
@@ -131,4 +148,4 @@ const deleteProduct = async (productId) => {
 }
 
 
-module.exports = { getProducts, getProductWithCategories, getSubProducts, getProduct, createProduct, upDateProduct, deleteProduct }
+module.exports = { getProductWithCategories, getSubProducts, getProductlist, getProduct, createProduct, upDateProduct, deleteProduct }

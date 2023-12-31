@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
-require('dotenv').config({ path: "../../vars/.env" });
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const { verifyAccessToken } = require('../Utils/token.utils');
 const { getAppUser } = require('../AppUser/appuser-service');
 const { updateOrder, resetOrder } = require('../Order/order-service');
-const { updateOrderShippingInfo } = require('../Order/order.helper')
+const { updateOrderShippingInfo } = require('../Order/order.helper');
 const { addOrderToOrderArchive } = require('../Utils/order-utils');
 const { retrieveOrderArchive } = require('../Order_Archive/order-archive-service');
 const { addSubToSubArchive } = require('../Utils/subscription-utils');
-const { updateSub, resetSub } = require('../Subscription/subscription-service');
+const { updateSub, resetSubOrder } = require('../Subscription/subscription-service');
 const { retrieveSubArchive } = require('../Subscription_Archive/sub-archive-service');
 const { addItemNamesToList } = require('../Subscription_Archive/helper')
 
@@ -39,7 +38,7 @@ router.get('/api/stripe/customer/portal', async (req, res) => {
 
 
 // CHECKOUT SUCCESS, REGULAR ITEMS
-router.get('/api/checkout/success/multiple/:sessionId',
+router.get('/api/checkout/success/regular/:sessionId',
     async (req, res) => {
         try {
             const decodedToken = await verifyAccessToken(req.headers["authorization"]);
@@ -47,19 +46,25 @@ router.get('/api/checkout/success/multiple/:sessionId',
             const userId = decodedToken.user.id;
 
             const user = await getAppUser(userId);
-            
+
             // update with stripe customer payment info
             const stripeOrderUpdate = await updateOrder(user, req.params.sessionId);
 
+            // handle order update when it fails.
+            if (!stripeOrderUpdate) {
+                resetOrder(user);
+                throw new Error("stripe order update failed")
+            }
+
             // update with shippo shipping details
             const shippingOrderUpdate = await updateOrderShippingInfo(user, stripeOrderUpdate);
-            
+
             // add order to order archive store
             await addOrderToOrderArchive(user, shippingOrderUpdate);
-            
+
             // reset order store
             await resetOrder(user);
-            
+
             // get order from order archive for use on client side
             const orderArchive = await retrieveOrderArchive(user._id);
 
@@ -79,7 +84,7 @@ router.get('/api/checkout/success/multiple/:sessionId',
 
 
 // CHECKOUT SUCCESS, SUBSCRIPTION ITEMS
-router.get('/api/sub/checkout/success/multiple/:sessionId',
+router.get('/api/checkout/success/sub/:sessionId',
     async (req, res) => {
         try {
             const decodedToken = await verifyAccessToken(req.headers["authorization"]);
@@ -87,19 +92,24 @@ router.get('/api/sub/checkout/success/multiple/:sessionId',
             const userId = decodedToken.user.id;
 
             const user = await getAppUser(userId);
-            
+
             // update with stripe customer payment info
             const stripeSubUpdate = await updateSub(user, req.params.sessionId);
 
+            if (!stripeSubUpdate) {
+                resetSubOrder(user);
+                throw new Error("stripe subscription update failed")
+            }
+
             // add the names of subscribed items to list
-            await addItemNamesToList(req.params.sessionId);
-            
-             // add order to subscription archive store
+            await addItemNamesToList(user, req.params.sessionId);
+
+            // add order to subscription archive store
             await addSubToSubArchive(user, stripeSubUpdate);
-            
+
             // reset subscription store
-            await resetSub(user);
-            
+            await resetSubOrder(user);
+
             // get subscription from subscription archive for use on client side
             const subArchive = await retrieveSubArchive(user._id);
 
@@ -109,7 +119,7 @@ router.get('/api/sub/checkout/success/multiple/:sessionId',
                 throw new Error("subscription not found in archive");
             }
 
-            res.send({ "status": "multiple subscription checkout success", "subscription": sub });
+            res.send({ "status": "subscription checkout success", "subscription": sub });
 
         }
         catch (err) {
@@ -118,8 +128,9 @@ router.get('/api/sub/checkout/success/multiple/:sessionId',
     });
 
 
+
 // CHECKOUT FAILURE, MULTIPLE ITEMS
-router.get('/api/checkout/failure/multiple/:sessionId', async (req, res) => {
+router.get('/api/checkout/failure/regular/:sessionId', async (req, res) => {
     try {
         const decodedToken = await verifyAccessToken(req.headers["authorization"]);
 
@@ -129,7 +140,7 @@ router.get('/api/checkout/failure/multiple/:sessionId', async (req, res) => {
 
         await resetOrder(user);
 
-        res.send({ "status": "multiple failed order removed" });
+        res.send({ "status": "checkout session failed and regular order resets" });
 
     }
     catch (err) {
@@ -139,7 +150,7 @@ router.get('/api/checkout/failure/multiple/:sessionId', async (req, res) => {
 
 
 // CHECKOUT FAILURE, SUBSCRIPTION ITEMS
-router.get('/api/checkout/failure/single/:sessionId', async (req, res) => {
+router.get('/api/checkout/failure/sub/:sessionId', async (req, res) => {
     try {
         const decodedToken = await verifyAccessToken(req.headers["authorization"]);
 
@@ -147,9 +158,9 @@ router.get('/api/checkout/failure/single/:sessionId', async (req, res) => {
 
         const user = await getAppUser(userId);
 
-        await resetOrder(user);
+        await resetSubOrder(user);
 
-        res.send({ "status": "single failed order removed" });
+        res.send({ "status": "checkout session failed and sub order resets" });
 
     }
     catch (err) {

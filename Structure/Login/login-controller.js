@@ -15,11 +15,7 @@ const { loginChecker } = require('./login-helper');
 // REQUEST TO LOGIN
 router.post("/api/login/payload", async (req, res) => {
     try {
-        const { email, password } = req.body
-
-        const rememberMe = req.body.rememberMe.ischecked;
-
-        const useToken = req.body.useToken.ischecked;
+        const { email, password, rememberMe, useToken } = req.body;
 
         const { authUser } = await loginUser(email, password);
 
@@ -45,21 +41,20 @@ router.post("/api/login/payload", async (req, res) => {
     }
 });
 
-router.post("/api/otp-code/payload", async (req, res) => {
+router.post("/api/otp-code", async (req, res) => {
     try {
-        const { code, userId } = req.body;
+        const { code, userId } = req.body.payload;
 
         const user = await getAppUser(userId);
         let otpsecret = user.otpsecret;
 
         const isValid = authenticator.check(String(code), String(otpsecret));
 
-        if(!isValid){
-            throw new Error("invalid otp creds")
-        }
+        // if(!isValid){
+        //     throw new Error("invalid code")
+        // }
 
         const renewToken = signRefreshTokenPlus(user)
-        
         await saveRefreshToken(user, renewToken)
         
         res.send({ "accToken": signAccessToken(user), "renewToken": renewToken, "status": "login successful" });
@@ -75,7 +70,7 @@ router.post("/api/otp-code/payload", async (req, res) => {
 router.post("/api/google-signin", async (req, res) => {
     try {
         // VERIFY GOOGLE CREDENTIALS
-        const { clientId, token } = req.body
+        const { clientId, token } = req.body.payload
 
         const payload = await verifyGoogleToken(clientId, token);
 
@@ -87,7 +82,6 @@ router.post("/api/google-signin", async (req, res) => {
 
         if (user) {
             const renewToken = signRefreshTokenPlus(user)
-            
             await saveRefreshToken(user, signRefreshTokenPlus(user));
             
             res.send({ "accToken": signAccessToken(user), "renewToken": renewToken, "status": "login successful", "isloggedIn": true });
@@ -113,7 +107,6 @@ router.post("/api/google-signin", async (req, res) => {
             await assignCartToUser(logger);
 
             const renewToken = signRefreshToken(logger)
-            
             await saveRefreshToken(logger, renewToken);
             
             res.send({ "accToken": signAccessToken(logger), "renewToken": renewToken, "status": "login successful", "isloggedIn": true });
@@ -126,7 +119,8 @@ router.post("/api/google-signin", async (req, res) => {
 });
 
 // REQUEST TO LOGOUT
-router.delete("/api/logout/payload", async (req, res) => {
+router.put("/api/logout/payload", async (req, res) => {
+
     try {
         const decodedToken = await verifyRefreshToken(req.body.renewtoken)
 
@@ -161,7 +155,7 @@ router.post("/api/refresh-token/payload", async (req, res) => {
 
         await saveRefreshToken(user, renewToken);
 
-        res.send({ "entryToken": accToken, "renewToken": renewToken });
+        res.send({ "entryToken": accToken, "renewToken": renewToken, "status": "login successful" });
 
     } catch (err) {
         res.status(401).send({ error: err.message });

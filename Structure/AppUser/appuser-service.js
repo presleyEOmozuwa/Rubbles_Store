@@ -1,4 +1,6 @@
 const User = require('../Models/user-model');
+const { passwordHasher } = require('../AccountUpdate/account-update-service');
+
 
 // GET ALL USERS
 const getAllUsers = async () => {
@@ -13,11 +15,7 @@ const getAllUsers = async () => {
 
 // GET SINGLE USER BY ID
 const getAppUser = async (userId) => {
-    const user = await User.findOne({
-        where: {
-            id: userId
-        }
-    });
+    const user = await User.findOne({ _id: userId });
 
     if (!user) {
         throw new Error("user not found");
@@ -28,14 +26,10 @@ const getAppUser = async (userId) => {
 
 // GET SINGLE USER BY ID
 const getUserByEmail = async (email) => {
-    const user = await User.findOne({
-        where: {
-            email: email
-        }
-    });
+    const user = await User.findOne({ email: email });
 
     if (!user) {
-        throw new Error("invalid email or password");
+        throw new Error("user not found");
     }
 
     return user;
@@ -43,11 +37,7 @@ const getUserByEmail = async (email) => {
 
 // GET USER BY STRIPE ID
 const getUserByStripeId = async (customerId) => {
-    const user = await User.findOne({
-        where: {
-            stripecustomerid: customerId
-        }
-    });
+    const user = await User.findOne({ stripecustomerid: customerId });
 
     if (!user) {
         throw new Error("user not found");
@@ -58,9 +48,8 @@ const getUserByStripeId = async (customerId) => {
 
 
 // UPDATE A USER
-const upDateUser = async (id, payload) => {
-    const user = await getAppUser(id);
-
+const upDateUser = async (userId, payload) => {
+    const user = await getAppUser(userId);
     user.set({
         username: payload.username,
         email: payload.email
@@ -74,6 +63,51 @@ const upDateUser = async (id, payload) => {
     return upDateUser;
 }
 
+const upDateUserName = async (user, username) => {
+    user.set({
+        username: username,
+    })
+
+    const update = await user.save()
+
+    if (!update) {
+        throw new Error("username update failed");
+    }
+    return update;
+}
+
+const upDateEmail = async (user, currEmail) => {
+    user.set({
+        email: currEmail
+    })
+
+    const update = await user.save();
+
+    if (!update) {
+        throw new Error("username update failed");
+    }
+    
+    return update;
+}
+
+const upDatePassword = async (user, newPassword) => {
+    
+    const pass = await passwordHasher(newPassword);
+    
+    user.set({
+        password: pass
+    })
+
+    const update = await user.save();
+
+    if (!update) {
+        throw new Error("password change failed");
+    }
+    
+    return update;
+}
+
+
 // DELETE A USER
 const deleteUser = async (id) => {
     let con = { isDeleted: false };
@@ -86,4 +120,4 @@ const deleteUser = async (id) => {
 }
 
 
-module.exports = { getAllUsers, getAppUser, getUserByEmail, getUserByStripeId, upDateUser, deleteUser }
+module.exports = { getAllUsers, getAppUser, getUserByEmail, getUserByStripeId, upDateUser, upDateUserName, upDatePassword, upDateEmail, deleteUser }

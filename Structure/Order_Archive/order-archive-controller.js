@@ -21,4 +21,28 @@ router.get('/api/order/history', async (req, res) => {
     }
 })
 
+router.get('/api/order-details/:sessionId', async (req, res) => {
+    try {
+        const decodedToken = await verifyAccessToken(req.headers["authorization"]);
+
+        const userId = decodedToken.user.id;
+
+        const user = await getAppUser(userId);
+
+        const orderArchive = await retrieveOrderArchive(user._id);
+
+        const order = orderArchive.orders.find((orderItem) => orderItem.checkoutSessionId === req.params.sessionId);
+
+        if (!order) {
+            throw new Error("order not found in archive");
+        }
+
+        res.send({ "order": order });
+    
+    }
+    catch (err) {
+        res.status(400).send({ "error": err.message });
+    }
+})
+
 module.exports = router;

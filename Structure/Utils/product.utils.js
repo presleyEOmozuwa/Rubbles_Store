@@ -11,7 +11,7 @@ const addCartToProduct = async (productId, cartId) => {
 const addCategoryToProduct = async (productId, category) => {
     await Product.findByIdAndUpdate(
         productId,
-        { $push: { categories: [category._id] } },
+        { $addToSet: { categories: [category._id] } },
         { new: true }
     );
 }

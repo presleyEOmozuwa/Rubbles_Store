@@ -57,15 +57,11 @@ const productSchema = new Schema({
         type: Number,
         default: 0
     },
-    isAvailable: {
-        type: String,
-        required: true
-    },
 
-    carts: [{type: ObjectId, ref: 'Cart'}],
+    carts: [{type: ObjectId, ref: 'Cart', default: null}],
     
     categories: {
-        type: [{type: ObjectId, ref: 'Category'}]
+        type: [{type: ObjectId, ref: 'Category', default: null}]
     }
     
 }, { timestamps: true } );
@@ -74,26 +70,26 @@ const productSchema = new Schema({
 const Product = model('Product', productSchema);
 
 const cartSchema = new Schema({
-    userId: { type: ObjectId, ref: 'User', required: true },
+    userId: { type: ObjectId, ref: 'User', default: null },
     description: {
         type: String,
         default: "cart assigned to user"
     },
-    products: [{type: ObjectId, ref: 'Product'}]
+    products: [{type: ObjectId, ref: 'Product', default: null}]
 });
 
 const Cart = model('Cart', cartSchema);
 
 
 const subCartSchema = new Schema({
-    userId: { type: ObjectId, ref: 'User', required: true },
+    userId: { type: ObjectId, ref: 'User', default: null},
 
     description: {
         type: String,
         default: "subscription cart assigned to user"
     },
 
-    subitems: [{ type: ObjectId, ref: 'Product' }]
+    subItems: [{ type: ObjectId, ref: 'Product', default: null }]
 });
 
 const SubCart = model('SubCart', subCartSchema);
@@ -145,7 +141,7 @@ const customerAddressSchema = new Schema({
 
 
 const subSchema = new Schema({
-    userId: { type: ObjectId, ref: 'User', required: true },
+    userId: { type: ObjectId, ref: 'User', default: null },
 
     stripecustomerid: {
         type: String,
@@ -182,7 +178,7 @@ const Subscription = model('Subscription', subSchema);
 
 
 const orderSchema = new Schema({
-    userId: { type: ObjectId, ref: 'User', required: true },
+    userId: { type: ObjectId, ref: 'User', default: null },
 
     stripecustomerid: {
         type: String,
@@ -240,7 +236,7 @@ const Order = model('Order', orderSchema);
 
 
 const orderArchiveSchema = new Schema({
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: ObjectId, ref: 'User', default: null },
     
     orders: [{ type: orderSchema, default: { } }]
 
@@ -250,7 +246,7 @@ const OrderArchive = model('OrderArchive', orderArchiveSchema);
 
 
 const subArchiveSchema = new Schema({
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: ObjectId, ref: 'User', default: null },
 
     subNames: [String],
     

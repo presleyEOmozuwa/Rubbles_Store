@@ -96,23 +96,31 @@ const verifyRefreshToken = async (refreshToken) => {
     })
 }
 
-const passwordResetToken = () => {
-    crypto.randomBytes(128, (err, buf) => {
-        if (err) throw err;
-        console.log(`${buf.length} bytes of random data: ${buf.toString('hex')}`);
-    })
+const passwordResetToken = (user) => {
+    const key = process.env.PASSWORD_RESET_TOKEN_KEY;
+    const payload = {
+        userId: user._id,
+        created: new Date()
+    }
+    const options = {
+        issuer: "Rubbles Tech",
+        expiresIn: '1h'
+    }
+
+    return jwt.sign(payload, key, options);
 }
 
 const saveRefreshToken = async (user, token) => {
-    const doc = await getRefreshToken(user._id);
-
-    if (doc){
-        throw new Error("refresh token already exist")
-    }
-    else{
-        await RefreshToken.create({
+    const doc = await retrieveRefreshToken(user._id);
+    if (doc.refreshtoken !== token) {
+        doc.set({
             refreshtoken: token
-        });
+        })
+
+        await doc.save();
+    }
+    else {
+        throw new Error("refresh token already exist")
     }
 }
 
@@ -122,7 +130,7 @@ const verifyGoogleToken = async (clientId, jwtToken) => {
         idToken: jwtToken,
         audience: clientId,
     });
-    
+
     const payload = ticket.getPayload();
 
     return payload;
@@ -130,23 +138,23 @@ const verifyGoogleToken = async (clientId, jwtToken) => {
 
 const resetRefreshToken = async (user, requestToken) => {
     const doc = await retrieveRefreshToken(user._id);
+    if (requestToken === doc.refreshtoken) {
+        doc.set({
+            refreshtoken: "refresh token"
+        })
 
-    if(requestToken !== doc.refreshtoken){
+        await doc.save();
+    }
+    else {
         throw new Error("refresh token do not match");
     }
-
-    doc.set({
-        refreshtoken: "refresh token"
-    })
-
-    await doc.save();
 
 }
 
 const emailToken = (user) => {
     const key = process.env.EMAIL_TOKEN_KEY;
     const payload = {
-        id: user._id,
+        userId: user._id,
         datecreated: new Date()
     }
     const options = {

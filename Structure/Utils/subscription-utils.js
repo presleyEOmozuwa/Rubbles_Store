@@ -44,7 +44,7 @@ const addSubToSubArchive = async (user, updatedSub) => {
 const addSubToOrder = async (subId, item) => {
     await Subscription.findByIdAndUpdate(
         subId,
-        { $addToSet: { products: [item] } },
+        { $addToSet: { subItems: [item] } },
         { new: true }
     );
 }

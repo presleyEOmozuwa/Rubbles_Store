@@ -14,6 +14,7 @@ const loginUser = async (email, password) => {
     }
 
     const delUser = await DeletedUser.findOne({ email: email });
+    
 
     if(delUser){
         throw new Error("user account is closed");

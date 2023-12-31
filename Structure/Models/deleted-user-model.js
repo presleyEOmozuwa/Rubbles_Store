@@ -4,16 +4,16 @@ const { Schema, model } = mongoose;
 const deletedUserSchema = new Schema({
     userId:{
         type: String,
-        required: true,
+        default: "userId"
     },
     email:{
         type: String,
-        required: true,
         unique: true,
+        default: "email"
     },
     username:{
         type: String,
-        required: true
+        default: "username"
     }
 }, { timestamps: true});
 
