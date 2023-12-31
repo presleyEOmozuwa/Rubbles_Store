@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { register } = require('./register-service');
-const { retrieveCart } = require('../Cart_AuthUser/cart-service');
-const { assignCartToUser, transferSessionProductsToCart } = require('../Utils/cart-util');
+const { assignCartToUser, sessionProductsHandler } = require('../Utils/cart-util');
 const { assignSubCartToUser } = require('../Utils/cart-subitems-utils');
 const { assignOrderArchiveToUser, assignOrderStoreToUser } = require('../Utils/order-utils');
 const { refreshTokenStore } = require('../Utils/token.utils');
@@ -11,41 +10,32 @@ const { locationTracker } = require('../Utils/user-utils');
 const {  assignSubscriptionToUser, assignSubArchiveToUser } = require('../Utils/subscription-utils');
 
 
-router.post('/api/register/payload', async (req, res) => {
+router.post('/api/register', async (req, res) => {
     try {
         // REGISTERED USER RETURNED
-        const { normalUser } = await register(req.body);
+        const createdUser = await register(req.body.payload);
 
-        await locationTracker(normalUser, req.session.id);
+        await locationTracker(createdUser, req.sessionID);
         
-        await assignCartToUser(normalUser);
+        await assignCartToUser(createdUser);
 
-        await assignSubCartToUser(normalUser);
+        await assignSubCartToUser(createdUser);
 
-        const { products } = req.session;
+        await sessionProductsHandler(req.session.products, createdUser, req)
+    
+        await refreshTokenStore(createdUser);
 
-        if(products){
-            products.forEach(async (product) => {
-                const cart = await retrieveCart(normalUser._id);
-                await transferSessionProductsToCart(cart._id, product);
-            })
-        }
-
-        req.session.destroy();
+        await assignOrderStoreToUser(createdUser);
         
-        await refreshTokenStore(normalUser);
+        await assignOrderArchiveToUser(createdUser);
 
-        await assignOrderStoreToUser(normalUser);
-        
-        await assignOrderArchiveToUser(normalUser);
+        await assignSubscriptionToUser(createdUser);
 
-        await assignSubscriptionToUser(normalUser);
+        await assignSubArchiveToUser(createdUser);
 
-        await assignSubArchiveToUser(normalUser);
-        
-        await sendEmailToUser(normalUser);
+        const result = await sendEmailToUser(createdUser);
 
-        res.send({ "status": "client registration successful", "isRegistered": true });
+        res.send({ "status": "client registration successful", "isRegistered": true, "sessionId": req.sessionID, "emailServer": result});
     
     } 
     catch (err) {

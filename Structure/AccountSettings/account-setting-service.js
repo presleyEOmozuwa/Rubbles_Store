@@ -14,10 +14,8 @@ const verifyEmailTokens = async (token) => {
         if (err && err.message === "jwt_expired") {
             throw new Error("email token expired");
         }
-
-        if (decodedToken) {
+        else{
             const userId = decodedToken.userId;
-            
             const user  = await getAppUser(userId);
             
             if(!user){
@@ -37,6 +35,7 @@ const verifyEmailTokens = async (token) => {
                 return;
             }
         }
+
     })
 }
 
@@ -69,6 +68,7 @@ const verifyPasswordResetTokens = async (token, password) => {
 }
 
 const forgotPasswordService = async (email) => {
+    let result;
     if (!email) {
         throw new Error("email address not found on request");
     }
@@ -90,11 +90,14 @@ const forgotPasswordService = async (email) => {
         html: htmlContent
     }
 
-    const { rejected } = emailSender(emailRequest);
+    result = await emailSender(emailRequest);
 
-    if (rejected) {
+    if (result) {
         throw new Error("Email sending failed");
     }
+    
+    return result;
+
 }
 
 module.exports = { forgotPasswordService, verifyEmailTokens, verifyPasswordResetTokens }

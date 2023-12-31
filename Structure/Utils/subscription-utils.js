@@ -5,29 +5,27 @@ const { getSubArchive, retrieveSubArchive } = require('../Subscription_Archive/s
 
 const assignSubscriptionToUser = async (user) => {
     const sub = await getSub(user._id);
-
     if (!sub) {
-        await Subscription.create({
-            userId: user._id
+        const result = await Subscription.create({
+            userId: user._id,
+            email: user.email
         })
+        return result;
     }
-    else {
-        throw new Error("subscription already exist")
-    }
+    return;
 }
 
 
 const assignSubArchiveToUser = async (user) => {
     const subArchive = await getSubArchive(user._id);
-
     if (!subArchive) {
-        await SubArchive.create({
-            userId: user._id
+        const result = await SubArchive.create({
+            userId: user._id,
+            email: user.email
         })
+        return result;
     }
-    else {
-        throw new Error("order archive already exist")
-    }
+    return;
 }
 
 const addSubToSubArchive = async (user, updatedSub) => {
@@ -44,7 +42,7 @@ const addSubToSubArchive = async (user, updatedSub) => {
 const addSubToOrder = async (subId, item) => {
     await Subscription.findByIdAndUpdate(
         subId,
-        { $addToSet: { products: [item] } },
+        { $addToSet: { subItems: [item] } },
         { new: true }
     );
 }

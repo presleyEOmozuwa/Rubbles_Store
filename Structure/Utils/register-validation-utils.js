@@ -4,7 +4,7 @@ const Joi = require('joi');
 const validationSchema = Joi.object({
     username: Joi.string()
         .alphanum()
-        .min(3)
+        .min(6)
         .max(30)
         .required(),
     

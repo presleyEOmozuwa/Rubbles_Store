@@ -35,38 +35,29 @@ const generateSessionSecret = () => {
     })
 }
 
+const generatePasswordHashKey = () => {
+    crypto.randomBytes(128, (err, buf) => {
+        if (err) throw err;
+        console.log(`${buf.length} bytes of random data: ${buf.toString('hex')}`);
+    })
+}
 
 const generateOTPSecret = () => {
     const secret = authenticator.generateSecret(64);
-    
     if(!secret){
         throw new Error("otp secret key generation failed");
     }
-    
     return secret;
 }
 
 const generateOTP = async (otpSecret) => {
-    const otp = authenticator.generate(otpSecret)
-
+    const otp = authenticator.generate(otpSecret);
     if(!otp){
-        throw new Error("otp generation failed")
+        throw new Error("otp failed");
     }
-    
     return otp;
 }
 
-const saveOTPSecret = async (user, otpSecret) => {
-    user.set({
-        otpsecret: otpSecret
-    })
-    await user.save();
-}
-
-const getOTPSecret  = (user) => {
-    const secret = user.otpsecret;
-    return secret;
-}
 
 
-module.exports = {generateAccessTokenKey, generateRefreshTokenKey, generateSessionSecret, generatepassWordResetKey, generateEmailTokenKey, generateOTPSecret, generateOTP, saveOTPSecret, getOTPSecret }
+module.exports = {generateAccessTokenKey, generateRefreshTokenKey, generateSessionSecret, generatepassWordResetKey, generateEmailTokenKey, generatePasswordHashKey, generateOTPSecret, generateOTP }

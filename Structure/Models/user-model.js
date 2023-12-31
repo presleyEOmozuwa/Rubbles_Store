@@ -1,34 +1,34 @@
 const mongoose = require('mongoose'); 
 const { Schema, model } = mongoose;
-const { Cart, SubCart, OrderArchive, Order, Subscription, SubArchive } = require('../Models/common-model');
+const { Cart, SubCart, OrderArchive, Order, Subscription, SubArchive } = require('./common-model');
 const RefreshToken = require('./refreshToken-model');
 
 // Declare the Schema of the Mongo model
 const userSchema = new Schema({
     stripecustomerid:{
         type: String,
-        required: true,
+        default: "stripecustomerid"
     },
     
     username:{
         type: String,
-        required: true,
+        default: "username"
     },
     
     email:{
         type: String,
-        required: true,
-        unique: true
+        unique: true,
+        default: null
     },
     
     password:{
         type: String,
-        required: true
+        default: "password"
     },
     
     role:{
         type: String,
-        required: true
+        default: "role"
     },
     
     confirmemail:{
@@ -44,6 +44,11 @@ const userSchema = new Schema({
     isblocked:{
         type: String,
         default: "false"
+    },
+
+    isloggedIn: {
+        type: Boolean,
+        default: false
     },
     
     otpsecret: {

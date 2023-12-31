@@ -1,17 +1,14 @@
-const { shippmentHandler } = require('../Shipping/shipment-service');
-const { transactionHandler } = require('../Shipping/transaction-service');
+const { shippingHandler } = require('../Shipping/shipping-service');
 const { estimatedDateHandler } = require('../Utils/date-utils');
 const { resetOrder } = require('./order-service');
 
 const updateOrderShippingInfo = async (user, order) => {
-    const shipment = await shippmentHandler();
-    const trans = await transactionHandler();
-
+    const trans = await shippingHandler();
     order.set({
-        deliveryTrackingId: trans.tracking_number,
-        deliveryTrackingUrl: trans.tracking_url_provider,
-        estimatedDeliveryDate: estimatedDateHandler(shipment.rates[0].estimated_days),
-        deliveryStatus: trans.tracking_status,
+        deliveryTrackingId: trans.tracker.id,
+        deliveryTrackingUrl: trans.tracker.public_url,
+        estimatedDeliveryDate: estimatedDateHandler(trans.selected_rate.est_delivery_days),
+        deliveryStatus: trans.tracker.status
     })
 
     const updatedOrder = await order.save();

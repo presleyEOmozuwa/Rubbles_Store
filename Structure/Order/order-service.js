@@ -65,11 +65,6 @@ const updateOrder = async (user, checkoutSessionId) => {
 
     const modifiedOrder = await order.save();
 
-    if(!modifiedOrder){
-        resetOrder(user);
-        throw new Error("stripe order update failed")
-    }
-
     return modifiedOrder;
 
 }
