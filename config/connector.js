@@ -43,5 +43,4 @@ const closeDatabase = async () => {
 }
 
 
-
 module.exports = { connect, clearDatabase, closeDatabase, }

@@ -15,7 +15,7 @@ const { loginChecker } = require('./login-helper');
 // REQUEST TO LOGIN
 router.post("/api/login/payload", async (req, res) => {
     try {
-        const { email, password, rememberMe, useToken } = req.body.payload;
+        const { email, password, rememberMe, useToken } = req.body;
 
         const { authUser } = await loginUser(email, password);
 
